@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import dbQuery from '@/lib/db'
+import dbQuery from '@/lib/db.async'
 import { isSetuConfigured } from '@/lib/setu/client'
 
 /**
@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
     const token = request.headers.get('authorization')?.replace('Bearer ', '')
     if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-    const session = dbQuery.get<{ user_id: number }>(
+    const session = await dbQuery.get<{ user_id: number }>(
       "SELECT user_id FROM sessions WHERE token = ? AND expires_at > datetime('now')",
       [token]
     )
@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     const otp = String(Math.floor(100000 + Math.random() * 900000))
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000).toISOString()
 
-    dbQuery.run(
+    await dbQuery.run(
       `INSERT INTO bank_otp_verifications (user_id, mobile_number, bank_name, otp, expires_at)
        VALUES (?, ?, ?, ?, ?)`,
       [session.user_id, mobileNumber, bankName, otp, expiresAt]
