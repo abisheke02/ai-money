@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
 
     const sessionToken = crypto.randomUUID()
     await dbQuery.run(
-      'INSERT INTO sessions (user_id, token, expires_at) VALUES (?, ?, ?)',
+      "INSERT INTO sessions (user_id, token, expires_at, created_at) VALUES (?, ?, ?, datetime('now'))",
       [user.id, sessionToken, new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()]
     )
 

@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
     const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
 
     await dbQuery.run(
-      'INSERT INTO sessions (user_id, token, expires_at) VALUES (?, ?, ?)',
+      "INSERT INTO sessions (user_id, token, expires_at, created_at) VALUES (?, ?, ?, datetime('now'))",
       [row.id, sessionToken, expiresAt]
     )
 
