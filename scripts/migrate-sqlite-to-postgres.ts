@@ -192,7 +192,8 @@ async function migrateTable(
           convertValue(row[col], col, columns[idx].type)
         )
         const rowPlaceholders = colNames.map((_, idx) => `$${idx + 1}`).join(', ')
-        const rowSql = `INSERT INTO "${tableName}" (${colNames.map(c => `"${c}`).join('", "')}") VALUES (${rowPlaceholders}) ON CONFLICT DO NOTHING`
+        const rowQuotedCols = colNames.map(c => `"${c}"`).join(', ')
+        const rowSql = `INSERT INTO "${tableName}" (${rowQuotedCols}) VALUES (${rowPlaceholders}) ON CONFLICT DO NOTHING`
         try {
           await pgClient.query(rowSql, rowValues)
           inserted++

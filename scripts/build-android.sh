@@ -34,25 +34,25 @@ DEBUG_MODE=false
 # ============================================================================
 
 print_header() {
-    echo -e "\n${BLUE}╔════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${BLUE}║${NC} $1"
-    echo -e "${BLUE}╚════════════════════════════════════════════════════════╝${NC}\n"
+    echo -e "\n${BLUE}╔════════════════════════════════════════════════════════╗${NC}" >&2
+    echo -e "${BLUE}║${NC} $1" >&2
+    echo -e "${BLUE}╚════════════════════════════════════════════════════════╝${NC}\n" >&2
 }
 
 print_info() {
-    echo -e "${BLUE}ℹ${NC} $1"
+    echo -e "${BLUE}ℹ${NC} $1" >&2
 }
 
 print_success() {
-    echo -e "${GREEN}✓${NC} $1"
+    echo -e "${GREEN}✓${NC} $1" >&2
 }
 
 print_warning() {
-    echo -e "${YELLOW}⚠${NC} $1"
+    echo -e "${YELLOW}⚠${NC} $1" >&2
 }
 
 print_error() {
-    echo -e "${RED}✗${NC} $1"
+    echo -e "${RED}✗${NC} $1" >&2
 }
 
 show_usage() {
@@ -327,8 +327,11 @@ fi
 build_release_bundle
 
 # Locate and display the output AAB
-AAB_FILE=$(locate_aab_file)
-BUILD_STATUS=$?
+if AAB_FILE=$(locate_aab_file); then
+    BUILD_STATUS=0
+else
+    BUILD_STATUS=$?
+fi
 
 if [ $BUILD_STATUS -eq 0 ]; then
     # Generate comprehensive build report

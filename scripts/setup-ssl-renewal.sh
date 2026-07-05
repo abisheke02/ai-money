@@ -25,8 +25,8 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-DOMAIN="${DOMAIN:-moneylix.com}"
-EMAIL="${EMAIL:-admin@moneylix.com}"
+DOMAIN="${DOMAIN:-moneylix.in}"
+EMAIL="${EMAIL:-admin@moneylix.in}"
 RENEWAL_MONTH="0"  # 0 = monthly via cron
 CRON_SCHEDULE="0 2 1 * *"  # 2 AM on the 1st of each month
 CERT_PATH="/etc/letsencrypt/live/${DOMAIN}/cert.pem"
@@ -252,7 +252,7 @@ main() {
     # Run checks
     check_root
     check_certbot
-    check_nginx
+    check_nginx || log_warning "Continuing without nginx plugin..."
     check_certificate_exists || log_warning "Continuing setup anyway..."
     
     # Test renewal

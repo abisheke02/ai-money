@@ -33,13 +33,13 @@ NC='\033[0m' # No Color
 PM2_APP_NAME="moneylix"
 APP_PORT="3006"
 APP_HOST="localhost"
-DOMAIN="moneylix.com"
+DOMAIN="moneylix.in"
 SSL_CERT_PATH="/etc/letsencrypt/live/${DOMAIN}/cert.pem"
 LOG_FILE="/var/log/moneylix/health-check-$(date +%Y%m%d).log"
 OUTPUT_JSON="${OUTPUT_JSON:-false}"
 CRITICAL_ONLY="${CRITICAL_ONLY:-false}"
 EMAIL_ON_ERROR="${EMAIL_ON_ERROR:-false}"
-EMAIL_ADDRESS="${EMAIL_ADDRESS:-admin@moneylix.com}"
+EMAIL_ADDRESS="${EMAIL_ADDRESS:-admin@moneylix.in}"
 
 # Health status counters
 HEALTH_OK=0
@@ -409,14 +409,16 @@ main() {
     parse_arguments "$@"
     setup_logging
     
-    # Run health checks
-    check_pm2_process
-    check_port_response
-    check_ssl_certificate
-    check_disk_space
-    check_memory_usage
-    check_application_logs
-    check_system_resources
+    # Run health checks (each may return non-zero on warning/error;
+    # `|| true` keeps the script running under `set -e` so every
+    # check executes and the summary reflects all of them)
+    check_pm2_process || true
+    check_port_response || true
+    check_ssl_certificate || true
+    check_disk_space || true
+    check_memory_usage || true
+    check_application_logs || true
+    check_system_resources || true
     
     # Generate output
     if [ "$OUTPUT_JSON" = "true" ]; then
