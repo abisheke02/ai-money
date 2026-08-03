@@ -155,10 +155,10 @@ export default function ProfilePage() {
       </div>
 
       {/* Profile card */}
-      <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+      <div className="rounded-2xl bg-white shadow-sm p-5">
         <div className="flex items-center gap-4 mb-5">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500/30 to-cyan-500/20 border border-emerald-500/30 flex items-center justify-center">
-            <span className="text-xl font-black text-emerald-300">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-lime-200 to-cyan-200 flex items-center justify-center">
+            <span className="text-xl font-black text-lime-700">
               {profile.username[0]?.toUpperCase()}
             </span>
           </div>
@@ -180,14 +180,14 @@ export default function ProfilePage() {
       </div>
 
       {/* Username */}
-      <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+      <div className="rounded-2xl bg-white shadow-sm p-4">
         <div className="flex items-center justify-between mb-1">
           <div className="flex items-center gap-2">
             <User className="w-4 h-4 text-slate-400" />
             <p className="text-xs font-semibold text-white">Username</p>
           </div>
           {editingField !== 'username' && (
-            <button onClick={() => setEditingField('username')} className="text-[10px] text-emerald-400 font-semibold hover:text-emerald-300">
+            <button onClick={() => setEditingField('username')} className="text-[10px] text-lime-700 font-semibold hover:text-lime-600">
               Edit
             </button>
           )}
@@ -204,7 +204,7 @@ export default function ProfilePage() {
             />
             <div className="flex gap-2">
               <button onClick={() => { setEditingField(null); setUsername(profile.username) }} className="px-3 py-1.5 rounded-lg border border-white/10 text-[11px] text-slate-400 hover:bg-white/5">Cancel</button>
-              <button onClick={() => handleSave('username')} disabled={saving || username.length < 3} className="px-3 py-1.5 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-[11px] font-semibold text-emerald-300 hover:bg-emerald-500/30 disabled:opacity-40">
+              <button onClick={() => handleSave('username')} disabled={saving || username.length < 3} className="px-3 py-1.5 rounded-lg bg-lime-400 text-[11px] font-semibold text-neutral-900 hover:bg-lime-300 disabled:opacity-40">
                 {saving ? 'Saving...' : 'Save'}
               </button>
             </div>
@@ -215,14 +215,14 @@ export default function ProfilePage() {
       </div>
 
       {/* Email */}
-      <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+      <div className="rounded-2xl bg-white shadow-sm p-4">
         <div className="flex items-center justify-between mb-1">
           <div className="flex items-center gap-2">
             <Mail className="w-4 h-4 text-slate-400" />
             <p className="text-xs font-semibold text-white">Email</p>
           </div>
           {editingField !== 'email' && (
-            <button onClick={() => setEditingField('email')} className="text-[10px] text-emerald-400 font-semibold hover:text-emerald-300">
+            <button onClick={() => setEditingField('email')} className="text-[10px] text-lime-700 font-semibold hover:text-lime-600">
               Edit
             </button>
           )}
@@ -238,7 +238,7 @@ export default function ProfilePage() {
             />
             <div className="flex gap-2">
               <button onClick={() => { setEditingField(null); setEmail(profile.email) }} className="px-3 py-1.5 rounded-lg border border-white/10 text-[11px] text-slate-400 hover:bg-white/5">Cancel</button>
-              <button onClick={() => handleSave('email')} disabled={saving || !email.includes('@')} className="px-3 py-1.5 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-[11px] font-semibold text-emerald-300 hover:bg-emerald-500/30 disabled:opacity-40">
+              <button onClick={() => handleSave('email')} disabled={saving || !email.includes('@')} className="px-3 py-1.5 rounded-lg bg-lime-400 text-[11px] font-semibold text-neutral-900 hover:bg-lime-300 disabled:opacity-40">
                 {saving ? 'Saving...' : 'Save'}
               </button>
             </div>
@@ -249,14 +249,14 @@ export default function ProfilePage() {
       </div>
 
       {/* Change Password */}
-      <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+      <div className="rounded-2xl bg-white shadow-sm p-4">
         <div className="flex items-center justify-between mb-1">
           <div className="flex items-center gap-2">
             <Lock className="w-4 h-4 text-slate-400" />
             <p className="text-xs font-semibold text-white">Password</p>
           </div>
           {editingField !== 'password' && (
-            <button onClick={() => setEditingField('password')} className="text-[10px] text-emerald-400 font-semibold hover:text-emerald-300">
+            <button onClick={() => setEditingField('password')} className="text-[10px] text-lime-700 font-semibold hover:text-lime-600">
               Change
             </button>
           )}
@@ -293,7 +293,7 @@ export default function ProfilePage() {
               <button
                 onClick={() => handleSave('password')}
                 disabled={saving || !currentPassword || newPassword.length < 8 || newPassword !== confirmPassword}
-                className="px-3 py-1.5 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-[11px] font-semibold text-emerald-300 hover:bg-emerald-500/30 disabled:opacity-40"
+                className="px-3 py-1.5 rounded-lg bg-lime-400 text-[11px] font-semibold text-neutral-900 hover:bg-lime-300 disabled:opacity-40"
               >
                 {saving ? 'Changing...' : 'Change Password'}
               </button>
@@ -306,7 +306,7 @@ export default function ProfilePage() {
 
       {/* Plan Info */}
       {profile.planExpires && (
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+        <div className="rounded-2xl bg-white shadow-sm p-4">
           <div className="flex items-center gap-2 mb-1">
             <Crown className="w-4 h-4 text-amber-400" />
             <p className="text-xs font-semibold text-white">Subscription</p>
@@ -314,7 +314,7 @@ export default function ProfilePage() {
           <p className="text-sm text-slate-300 ml-6">
             {profile.plan.charAt(0).toUpperCase() + profile.plan.slice(1)} plan · Expires {new Date(profile.planExpires).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
           </p>
-          <Link href="/dashboard/pricing" className="text-[10px] text-emerald-400 font-semibold ml-6 hover:underline">
+          <Link href="/dashboard/pricing" className="text-[10px] text-lime-700 font-semibold ml-6 hover:underline">
             Manage plan →
           </Link>
         </div>

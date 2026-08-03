@@ -174,7 +174,7 @@ export default function RecurringPage() {
         {!showForm && (
           <button
             onClick={() => setShowForm(true)}
-            className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 font-semibold hover:bg-emerald-500/30 active:scale-95 transition-all"
+            className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-lime-400 text-neutral-900 font-semibold hover:bg-lime-300 active:scale-95 transition-all"
           >
             <Plus className="w-3.5 h-3.5" /> New
           </button>
@@ -195,7 +195,7 @@ export default function RecurringPage() {
               <button key={t} onClick={() => setForm({ ...form, type: t })}
                 className={`flex-1 py-2 rounded-xl text-xs font-semibold border transition ${
                   form.type === t
-                    ? t === 'credit' ? 'bg-emerald-500/20 border-emerald-500/30 text-emerald-300' : 'bg-rose-500/20 border-rose-500/30 text-rose-300'
+                    ? t === 'credit' ? 'bg-lime-100 text-lime-700' : 'bg-rose-100 text-rose-700'
                     : 'border-white/10 text-slate-400 hover:bg-white/5'
                 }`}
               >
@@ -288,7 +288,7 @@ export default function RecurringPage() {
           <button
             onClick={handleCreate}
             disabled={saving || !form.amount}
-            className="w-full py-2.5 rounded-xl bg-emerald-500/20 border border-emerald-500/30 text-sm font-bold text-emerald-300 hover:bg-emerald-500/30 active:scale-95 transition-all disabled:opacity-40"
+            className="w-full py-2.5 rounded-xl bg-lime-400 text-sm font-bold text-neutral-900 hover:bg-lime-300 active:scale-95 transition-all disabled:opacity-40"
           >
             {saving ? 'Creating...' : 'Create Recurring Transaction'}
           </button>
@@ -320,8 +320,8 @@ export default function RecurringPage() {
                   rule.type === 'credit' ? 'bg-emerald-500/15' : 'bg-rose-500/15'
                 }`}>
                   {rule.type === 'credit'
-                    ? <TrendingUp className="w-4 h-4 text-emerald-400" />
-                    : <TrendingDown className="w-4 h-4 text-rose-400" />
+                    ? <TrendingUp className="w-4 h-4 text-lime-700" />
+                    : <TrendingDown className="w-4 h-4 text-rose-600" />
                   }
                 </div>
 
@@ -344,7 +344,7 @@ export default function RecurringPage() {
                 </div>
 
                 {/* Amount */}
-                <p className={`text-sm font-black flex-shrink-0 ${rule.type === 'credit' ? 'text-emerald-400' : 'text-rose-400'}`}>
+                <p className={`text-sm font-black flex-shrink-0 ${rule.type === 'credit' ? 'text-lime-700' : 'text-rose-600'}`}>
                   {rule.type === 'credit' ? '+' : '-'}₹{rule.amount.toLocaleString('en-IN')}
                 </p>
               </div>
@@ -372,7 +372,7 @@ export default function RecurringPage() {
                     >
                       {rule.status === 'active'
                         ? <Pause className="w-3.5 h-3.5 text-amber-400" />
-                        : <Play className="w-3.5 h-3.5 text-emerald-400" />
+                        : <Play className="w-3.5 h-3.5 text-lime-700" />
                       }
                     </button>
                   )}
@@ -381,7 +381,7 @@ export default function RecurringPage() {
                     className="p-1.5 rounded-lg hover:bg-rose-500/10 transition"
                     title="Delete"
                   >
-                    <Trash2 className="w-3.5 h-3.5 text-rose-400" />
+                    <Trash2 className="w-3.5 h-3.5 text-rose-600" />
                   </button>
                 </div>
               </div>

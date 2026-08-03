@@ -187,7 +187,7 @@ export default function BankTransactionsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="w-8 h-8 border-3 border-emerald-400 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-3 border-lime-500 border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
@@ -198,7 +198,7 @@ export default function BankTransactionsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-base font-bold text-white flex items-center gap-2">
-            <Building2 className="w-5 h-5 text-emerald-400" />
+            <Building2 className="w-5 h-5 text-lime-700" />
             Bank Transactions
           </h1>
           <p className="text-[10px] text-slate-400 mt-0.5">
@@ -216,7 +216,7 @@ export default function BankTransactionsPage() {
           <button
             onClick={handleSync}
             disabled={syncing}
-            className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl border border-emerald-500/20 bg-emerald-500/10 text-emerald-300 font-semibold hover:bg-emerald-500/20 active:scale-95 transition-all disabled:opacity-40"
+            className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-lime-100 text-lime-700 font-semibold hover:bg-lime-200 active:scale-95 transition-all disabled:opacity-40"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${syncing ? 'animate-spin' : ''}`} />
             {syncing ? 'Syncing...' : 'Sync'}
@@ -232,11 +232,11 @@ export default function BankTransactionsPage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
             <p className="text-[10px] text-slate-400 uppercase tracking-wider font-bold">Total In</p>
-            <p className="text-lg font-black text-emerald-400 mt-1">₹{totalCredit.toLocaleString('en-IN')}</p>
+            <p className="text-lg font-black text-lime-700 mt-1">₹{totalCredit.toLocaleString('en-IN')}</p>
           </div>
           <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
             <p className="text-[10px] text-slate-400 uppercase tracking-wider font-bold">Total Out</p>
-            <p className="text-lg font-black text-rose-400 mt-1">₹{totalDebit.toLocaleString('en-IN')}</p>
+            <p className="text-lg font-black text-rose-600 mt-1">₹{totalDebit.toLocaleString('en-IN')}</p>
           </div>
           <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
             <p className="text-[10px] text-slate-400 uppercase tracking-wider font-bold">Transactions</p>
@@ -244,7 +244,7 @@ export default function BankTransactionsPage() {
           </div>
           <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
             <p className="text-[10px] text-slate-400 uppercase tracking-wider font-bold">Uncategorised</p>
-            <p className={`text-lg font-black mt-1 ${uncategorisedCount > 0 ? 'text-amber-400' : 'text-emerald-400'}`}>
+            <p className={`text-lg font-black mt-1 ${uncategorisedCount > 0 ? 'text-amber-600' : 'text-lime-700'}`}>
               {uncategorisedCount}
             </p>
             {uncategorisedCount > 0 && (
@@ -348,8 +348,8 @@ export default function BankTransactionsPage() {
                   tx.type === 'credit' ? 'bg-emerald-500/15' : 'bg-rose-500/15'
                 }`}>
                   {tx.type === 'credit'
-                    ? <ArrowDownLeft className="w-4 h-4 text-emerald-400" />
-                    : <ArrowUpRight className="w-4 h-4 text-rose-400" />
+                    ? <ArrowDownLeft className="w-4 h-4 text-lime-700" />
+                    : <ArrowUpRight className="w-4 h-4 text-rose-600" />
                   }
                 </div>
 
@@ -366,7 +366,7 @@ export default function BankTransactionsPage() {
                     {categoryName && (
                       <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full ${
                         tx.is_categorised
-                          ? 'bg-emerald-500/15 text-emerald-400'
+                          ? 'bg-lime-100 text-lime-700'
                           : 'bg-violet-500/15 text-violet-400'
                       }`}>
                         {tx.is_categorised ? '' : '✨ '}{categoryName}
@@ -378,7 +378,7 @@ export default function BankTransactionsPage() {
                       </span>
                     )}
                     {tx.is_duplicate ? (
-                      <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-amber-500/15 text-amber-400">
+                      <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-amber-500/15 text-amber-600">
                         Duplicate?
                       </span>
                     ) : null}
@@ -388,7 +388,7 @@ export default function BankTransactionsPage() {
                 {/* Amount */}
                 <div className="text-right flex-shrink-0">
                   <p className={`text-sm font-black ${
-                    tx.type === 'credit' ? 'text-emerald-400' : 'text-rose-400'
+                    tx.type === 'credit' ? 'text-lime-700' : 'text-rose-600'
                   }`}>
                     {tx.type === 'credit' ? '+' : '-'}₹{tx.amount.toLocaleString('en-IN')}
                   </p>

@@ -94,10 +94,10 @@ export default function DashboardPage() {
     return <div className="flex items-center justify-center h-64"><div className="w-8 h-8 border-3 border-primary border-t-transparent rounded-full animate-spin" /></div>
   }
   if (!activeBusiness) {
-    return <div className="flex flex-col items-center justify-center h-64 text-slate-400 gap-4">
-      <div className="p-4 rounded-full bg-white/5"><AlertCircle className="w-10 h-10" /></div>
+    return <div className="flex flex-col items-center justify-center h-64 text-neutral-400 gap-4">
+      <div className="p-4 rounded-full bg-neutral-100"><AlertCircle className="w-10 h-10" /></div>
       <p className="font-semibold">No business found. Let&apos;s set one up!</p>
-      <Link href="/onboarding" className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black px-6 py-3 rounded-2xl transition">
+      <Link href="/onboarding" className="bg-primary hover:bg-primary/90 text-primary-foreground font-black px-6 py-3 rounded-2xl transition">
         Create Your Business
       </Link>
     </div>
@@ -110,10 +110,10 @@ export default function DashboardPage() {
   const totalCatSpend = categorySpend.reduce((s, c) => s + c.amount, 0)
 
   const summaryCards = [
-    { title: 'Total Balance',   value: fmt(totalBalance), change: '+12.4%', sub: 'vs last month',  icon: Wallet, color: 'text-white', border: 'border-white/10', bg: 'from-white/10 to-white/5' },
-    { title: 'Monthly Income',  value: fmt(monthCredit), change: '+8.1%', sub: 'this month', icon: TrendingUp,  color: 'text-emerald-400', border: 'border-white/10', bg: 'from-emerald-500/10 to-white/5' },
-    { title: 'Monthly Expense', value: fmt(monthDebit), change: '-3.2%', sub: 'this month', icon: TrendingDown, color: 'text-rose-400', border: 'border-white/10', bg: 'from-rose-500/10 to-white/5' },
-    { title: 'Savings Rate',    value: `${Math.max(0,savingsRate)}%`, change: '+4.5%', sub: 'of income', icon: Target,  color: 'text-cyan-400', border: 'border-white/10', bg: 'from-cyan-500/10 to-white/5' },
+    { title: 'Total Balance',   value: fmt(totalBalance), change: '+12.4%', sub: 'vs last month',  icon: Wallet,       iconWrap: 'bg-neutral-900 text-neutral-50', glow: 'hover:shadow-neutral-400/20' },
+    { title: 'Monthly Income',  value: fmt(monthCredit),  change: '+8.1%',  sub: 'this month',      icon: TrendingUp,   iconWrap: 'bg-lime-100 text-lime-700',       glow: 'hover:shadow-lime-400/30' },
+    { title: 'Monthly Expense', value: fmt(monthDebit),   change: '-3.2%',  sub: 'this month',      icon: TrendingDown, iconWrap: 'bg-rose-100 text-rose-600',       glow: 'hover:shadow-rose-400/20' },
+    { title: 'Savings Rate',    value: `${Math.max(0,savingsRate)}%`, change: '+4.5%', sub: 'of income', icon: Target,  iconWrap: 'bg-cyan-100 text-cyan-700',       glow: 'hover:shadow-cyan-400/20' },
   ]
 
   return (
@@ -141,22 +141,22 @@ export default function DashboardPage() {
       )}
 
       {/* Header Panel */}
-      <header className="flex flex-col gap-6 rounded-[32px] border border-white/10 bg-white/5 p-6 backdrop-blur-xl md:flex-row md:items-center md:justify-between shadow-2xl">
+      <header className="flex flex-col gap-6 rounded-[32px] bg-neutral-900 p-6 md:flex-row md:items-center md:justify-between shadow-2xl">
         <div>
-          <p className="text-sm text-emerald-400 font-bold tracking-widest uppercase">Welcome back</p>
-          <h2 className="text-3xl font-extrabold text-white mt-1">{activeBusiness.name}</h2>
-          <p className="mt-2 text-sm text-slate-400 font-medium">Your financial command center is ready.</p>
+          <p className="text-sm text-lime-400 font-bold tracking-widest uppercase">Welcome back</p>
+          <h2 className="text-3xl font-extrabold text-neutral-50 mt-1">{activeBusiness.name}</h2>
+          <p className="mt-2 text-sm text-neutral-400 font-medium">Your financial command center is ready.</p>
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
           <div className="relative group">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-primary transition-colors" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500 group-focus-within:text-lime-400 transition-colors" />
             <input
               placeholder="Quick search..."
-              className="rounded-2xl border border-white/10 bg-slate-900/70 pl-11 pr-4 py-3 text-sm outline-none placeholder:text-slate-500 focus:border-primary/50 w-full md:w-64 transition-all"
+              className="rounded-2xl border border-neutral-700 bg-neutral-800 pl-11 pr-4 py-3 text-sm text-neutral-50 outline-none placeholder:text-neutral-500 focus:border-lime-400/50 w-full md:w-64 transition-all"
             />
           </div>
-          <Button variant="outline" className="rounded-2xl">Export</Button>
+          <Button variant="outline" className="rounded-2xl !border-neutral-700 !text-neutral-50 hover:!bg-neutral-800">Export</Button>
           <Link href="/dashboard/transactions?action=add">
             <Button className="rounded-2xl px-6 gap-2"><PlusIcon className="w-4 h-4" /> Add Transaction</Button>
           </Link>
@@ -166,21 +166,21 @@ export default function DashboardPage() {
       {/* Summary Row */}
       <section className="grid gap-3 grid-cols-2 xl:grid-cols-4">
         {summaryCards.map((card) => (
-          <div key={card.title} className={cn("rounded-2xl border p-3 sm:p-5 backdrop-blur-xl shadow-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl bg-gradient-to-br flex flex-col justify-between min-h-[110px]", card.border, card.bg)}>
+          <div key={card.title} className={cn("group rounded-2xl bg-white p-3 sm:p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl flex flex-col justify-between min-h-[110px]", card.glow)}>
             <div className="flex items-start justify-between">
               <div className="flex-1 min-w-0 mr-2">
-                <p className="text-[9px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest truncate">{card.title}</p>
-                <h3 className="mt-2 text-sm sm:text-2xl md:text-3xl font-black text-white font-mono tabular-nums truncate">{card.value}</h3>
+                <p className="text-[9px] sm:text-xs font-bold text-neutral-400 uppercase tracking-widest truncate">{card.title}</p>
+                <h3 className="mt-2 text-sm sm:text-2xl md:text-3xl font-black text-neutral-900 font-mono tabular-nums truncate">{card.value}</h3>
               </div>
-              <div className="flex h-8 w-8 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-xl bg-white/10 border border-white/5 shadow-inner">
-                <card.icon className={cn("w-4 h-4 sm:w-6 sm:h-6", card.color)} />
+              <div className={cn("flex h-8 w-8 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110", card.iconWrap)}>
+                <card.icon className="w-4 h-4 sm:w-6 sm:h-6" />
               </div>
             </div>
             <div className="mt-3 flex items-center gap-1">
-              <span className="rounded-full bg-emerald-400/10 border border-emerald-500/20 px-2 py-0.5 text-[9px] sm:text-[10px] font-black text-emerald-400">
+              <span className="rounded-full bg-lime-100 px-2 py-0.5 text-[9px] sm:text-[10px] font-black text-lime-700">
                 {card.change}
               </span>
-              <span className="text-[9px] sm:text-[10px] uppercase font-bold text-slate-500 tracking-wider truncate">
+              <span className="text-[9px] sm:text-[10px] uppercase font-bold text-neutral-400 tracking-wider truncate">
                 {card.sub}
               </span>
             </div>
@@ -191,13 +191,13 @@ export default function DashboardPage() {
       {/* Main Analytics Section */}
       <section className="grid gap-6 grid-cols-1 xl:grid-cols-3">
         {/* Cash Flow Chart */}
-        <div className="xl:col-span-2 rounded-[32px] border border-white/5 bg-white/5 p-8 backdrop-blur-xl shadow-2xl flex flex-col">
+        <div className="xl:col-span-2 rounded-[32px] bg-white p-8 shadow-sm flex flex-col">
           <div className="mb-8 flex items-center justify-between">
             <div>
-              <h3 className="text-2xl font-black text-white tracking-tight">Cash Flow Overview</h3>
-              <p className="text-sm text-slate-400 font-medium">Monthly performance and growth trend</p>
+              <h3 className="text-2xl font-black text-neutral-900 tracking-tight">Cash Flow Overview</h3>
+              <p className="text-sm text-neutral-400 font-medium">Monthly performance and growth trend</p>
             </div>
-            <select className="rounded-2xl border border-white/5 bg-slate-900 px-4 py-2 text-xs font-bold text-slate-400 outline-none transition-all focus:ring-2 focus:ring-primary/20">
+            <select className="rounded-2xl border border-black/10 bg-neutral-50 px-4 py-2 text-xs font-bold text-neutral-500 outline-none transition-all focus:ring-2 focus:ring-primary/20">
               <option>Last 7 Days</option>
               <option>Last 30 Days</option>
             </select>
@@ -207,62 +207,62 @@ export default function DashboardPage() {
             {dailyCashflow.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={dailyCashflow} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
-                  <XAxis dataKey="date" stroke="#475569" fontSize={10} tickLine={false} axisLine={false} tickFormatter={(v) => { const d = new Date(v + 'T00:00:00'); return isNaN(d.getTime()) ? v : d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) }} />
-                  <YAxis stroke="#475569" fontSize={10} tickLine={false} axisLine={false} />
+                  <XAxis dataKey="date" stroke="#9CA3AF" fontSize={10} tickLine={false} axisLine={false} tickFormatter={(v) => { const d = new Date(v + 'T00:00:00'); return isNaN(d.getTime()) ? v : d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) }} />
+                  <YAxis stroke="#9CA3AF" fontSize={10} tickLine={false} axisLine={false} />
                   <Tooltip
-                    cursor={{ fill: 'rgba(255,255,255,0.05)', radius: 12 }}
-                    contentStyle={{ backgroundColor: 'rgba(15,23,42,0.95)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '16px', backdropFilter: 'blur(10px)', color: '#fff' }}
+                    cursor={{ fill: 'rgba(0,0,0,0.04)', radius: 12 }}
+                    contentStyle={{ backgroundColor: '#171717', border: 'none', borderRadius: '16px', color: '#fff' }}
                   />
                   <Bar dataKey="credit" name="Income" fill="url(#colorIncome)" radius={[8, 8, 0, 0]} />
                   <Bar dataKey="debit" name="Expense" fill="url(#colorExpense)" radius={[8, 8, 0, 0]} />
                   <defs>
                     <linearGradient id="colorIncome" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#10B981" stopOpacity={0.8} />
-                      <stop offset="100%" stopColor="#10B981" stopOpacity={0.2} />
+                      <stop offset="0%" stopColor="#84CC16" stopOpacity={0.9} />
+                      <stop offset="100%" stopColor="#84CC16" stopOpacity={0.3} />
                     </linearGradient>
                     <linearGradient id="colorExpense" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#F43F5E" stopOpacity={0.8} />
-                      <stop offset="100%" stopColor="#F43F5E" stopOpacity={0.2} />
+                      <stop offset="0%" stopColor="#F43F5E" stopOpacity={0.9} />
+                      <stop offset="100%" stopColor="#F43F5E" stopOpacity={0.3} />
                     </linearGradient>
                   </defs>
                 </BarChart>
               </ResponsiveContainer>
             ) : (
-              <div className="h-full flex items-center justify-center text-slate-500 font-medium">Insufficient data for chart</div>
+              <div className="h-full flex items-center justify-center text-neutral-400 font-medium">Insufficient data for chart</div>
             )}
           </div>
         </div>
 
         {/* Categories Split */}
-        <div className="rounded-[32px] border border-white/5 bg-white/5 p-8 backdrop-blur-xl shadow-2xl flex flex-col items-center">
+        <div className="rounded-[32px] bg-white p-8 shadow-sm flex flex-col items-center">
           <div className="w-full mb-8">
-            <h3 className="text-2xl font-black text-white tracking-tight text-center">Spending Split</h3>
-            <p className="text-sm text-slate-400 font-medium text-center">Top expense categories</p>
+            <h3 className="text-2xl font-black text-neutral-900 tracking-tight text-center">Spending Split</h3>
+            <p className="text-sm text-neutral-400 font-medium text-center">Top expense categories</p>
           </div>
 
           <div className="relative flex items-center justify-center h-56 w-56 mb-8 mt-4">
              <ResponsiveContainer width="100%" height="100%">
                <PieChart>
                  <Pie data={categorySpend} dataKey="amount" cx="50%" cy="50%" innerRadius={65} outerRadius={90} paddingAngle={2} stroke="none">
-                    {categorySpend.map((e, index) => <Cell key={index} fill={e.categoryColor} className="filter drop-shadow-[0_0_8px_rgba(255,255,255,0.1)] outline-none" />)}
+                    {categorySpend.map((e, index) => <Cell key={index} fill={e.categoryColor} className="outline-none" />)}
                  </Pie>
-                 <Tooltip contentStyle={{ backgroundColor: 'rgba(15,23,42,0.95)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '16px' }} />
+                 <Tooltip contentStyle={{ backgroundColor: '#171717', border: 'none', borderRadius: '16px', color: '#fff' }} />
                </PieChart>
              </ResponsiveContainer>
              <div className="absolute flex flex-col items-center justify-center text-center">
-                <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Total Spent</p>
-                <h4 className="text-2xl font-black text-white mt-1">{fmt(totalCatSpend)}</h4>
+                <p className="text-[10px] font-black text-neutral-400 uppercase tracking-widest">Total Spent</p>
+                <h4 className="text-2xl font-black text-neutral-900 mt-1">{fmt(totalCatSpend)}</h4>
              </div>
           </div>
 
           <div className="w-full space-y-3">
             {categorySpend.slice(0, 4).map((cat) => (
-              <div key={cat.categoryName} className="flex items-center justify-between rounded-2xl bg-white/5 border border-white/5 px-4 py-3 group transition-colors hover:bg-white/10">
+              <div key={cat.categoryName} className="flex items-center justify-between rounded-2xl bg-neutral-50 px-4 py-3 group transition-colors hover:bg-neutral-100">
                 <div className="flex items-center gap-3">
                   <div className="w-2 h-2 rounded-full" style={{ backgroundColor: cat.categoryColor }} />
-                  <span className="text-sm font-bold text-slate-300 group-hover:text-white transition-colors">{cat.categoryName}</span>
+                  <span className="text-sm font-bold text-neutral-500 group-hover:text-neutral-900 transition-colors">{cat.categoryName}</span>
                 </div>
-                <span className="text-sm font-black text-white font-mono">{totalCatSpend > 0 ? Math.round((cat.amount / totalCatSpend) * 100) : 0}%</span>
+                <span className="text-sm font-black text-neutral-900 font-mono">{totalCatSpend > 0 ? Math.round((cat.amount / totalCatSpend) * 100) : 0}%</span>
               </div>
             ))}
           </div>
@@ -270,14 +270,14 @@ export default function DashboardPage() {
       </section>
 
       {/* Recent Activity Section */}
-      <section className="rounded-[32px] border border-white/5 bg-white/5 p-8 backdrop-blur-xl shadow-2xl">
+      <section className="rounded-[32px] bg-white p-8 shadow-sm">
         <div className="mb-8 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div>
-            <h3 className="text-2xl font-black text-white tracking-tight">Recent Transactions</h3>
-            <p className="text-sm text-slate-400 font-medium font-mono uppercase tracking-widest">Live Activity Log</p>
+            <h3 className="text-2xl font-black text-neutral-900 tracking-tight">Recent Transactions</h3>
+            <p className="text-sm text-neutral-400 font-medium font-mono uppercase tracking-widest">Live Activity Log</p>
           </div>
           <Link href="/dashboard/transactions">
-             <Button variant="ghost" className="rounded-2xl px-6 gap-2 text-emerald-400 hover:bg-emerald-400/10">
+             <Button variant="ghost" className="rounded-2xl px-6 gap-2 !text-lime-700 hover:!bg-lime-50">
                 View All <ArrowRight className="w-4 h-4" />
              </Button>
           </Link>
@@ -285,14 +285,14 @@ export default function DashboardPage() {
 
         <div className="space-y-4">
           {recentTransactions.length === 0 ? (
-            <div className="text-center py-20 text-slate-500 font-medium">No activity recorded yet for this business.</div>
+            <div className="text-center py-20 text-neutral-400 font-medium">No activity recorded yet for this business.</div>
           ) : (
             <>
               {/* Desktop Table View */}
               <div className="overflow-x-auto hidden lg:block">
                 <table className="w-full min-w-[720px] border-separate border-spacing-y-4">
                   <thead>
-                    <tr className="text-left text-[11px] font-black text-slate-500 uppercase tracking-[0.2em] px-4">
+                    <tr className="text-left text-[11px] font-black text-neutral-400 uppercase tracking-[0.2em] px-4">
                       <th className="px-6 py-2">Entity</th>
                       <th className="px-6 py-2">Timestamp</th>
                       <th className="px-6 py-2">Category</th>
@@ -302,21 +302,21 @@ export default function DashboardPage() {
                   </thead>
                   <tbody className="space-y-4">
                     {recentTransactions.map((tx) => (
-                      <tr key={tx.id} className="rounded-2xl bg-slate-900/60 shadow-lg group hover:bg-slate-800 transition-all duration-300">
+                      <tr key={tx.id} className="rounded-2xl bg-neutral-50 group hover:bg-neutral-100 transition-all duration-300">
                         <td className="rounded-l-3xl px-6 py-5">
-                          <div className="font-bold text-white group-hover:text-primary transition-colors">{tx.note || 'Internal Transfer'}</div>
-                          {tx.tags && <div className="text-[10px] text-slate-500 mt-1">#{tx.tags}</div>}
+                          <div className="font-bold text-neutral-900 group-hover:text-lime-700 transition-colors">{tx.note || 'Internal Transfer'}</div>
+                          {tx.tags && <div className="text-[10px] text-neutral-400 mt-1">#{tx.tags}</div>}
                         </td>
-                        <td className="px-6 py-5 text-sm text-slate-400 font-medium">
+                        <td className="px-6 py-5 text-sm text-neutral-400 font-medium">
                           {new Date(tx.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
                         </td>
                         <td className="px-6 py-5">
                            <span className="flex items-center gap-2">
-                              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: tx.category?.color || '#334155' }} />
-                              <span className="text-sm font-bold text-slate-300">{tx.category?.name || 'Unsorted'}</span>
+                              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: tx.category?.color || '#94A3B8' }} />
+                              <span className="text-sm font-bold text-neutral-600">{tx.category?.name || 'Unsorted'}</span>
                            </span>
                         </td>
-                        <td className={cn("px-6 py-5 text-right font-black font-mono text-base tabular-nums", tx.type === 'credit' ? 'text-emerald-400' : 'text-rose-400')}>
+                        <td className={cn("px-6 py-5 text-right font-black font-mono text-base tabular-nums", tx.type === 'credit' ? 'text-lime-700' : 'text-rose-600')}>
                           {tx.type === 'credit' ? '+' : '-'}{fmt(tx.amount)}
                         </td>
                         <td className="rounded-r-3xl px-6 py-5 text-center">
@@ -333,23 +333,23 @@ export default function DashboardPage() {
               {/* Mobile List View */}
               <div className="block lg:hidden space-y-1.5 px-1">
                 {recentTransactions.map((tx) => (
-                  <div key={tx.id} className="py-2 px-2.5 bg-slate-900/60 rounded-xl border border-white/5 flex items-center justify-between gap-2">
+                  <div key={tx.id} className="py-2 px-2.5 bg-neutral-50 rounded-xl flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2 min-w-0">
-                      <div className={`w-2 h-2 rounded-full flex-shrink-0 ${tx.type === 'credit' ? 'bg-emerald-500' : 'bg-rose-500'}`} />
+                      <div className={`w-2 h-2 rounded-full flex-shrink-0 ${tx.type === 'credit' ? 'bg-lime-500' : 'bg-rose-500'}`} />
                       <div className="flex-shrink-0 text-center w-8">
-                        <div className="text-[10px] font-black text-white font-mono leading-tight">{new Date(tx.date).toLocaleDateString('en-GB', { day: '2-digit' })}</div>
-                        <div className="text-[8px] text-slate-500 font-bold uppercase leading-tight">{new Date(tx.date).toLocaleDateString('en-GB', { month: 'short' })}</div>
+                        <div className="text-[10px] font-black text-neutral-900 font-mono leading-tight">{new Date(tx.date).toLocaleDateString('en-GB', { day: '2-digit' })}</div>
+                        <div className="text-[8px] text-neutral-400 font-bold uppercase leading-tight">{new Date(tx.date).toLocaleDateString('en-GB', { month: 'short' })}</div>
                       </div>
                       <div className="min-w-0 flex-1">
-                        <div className="text-xs font-bold text-white truncate">{tx.note || 'Internal Transfer'}</div>
+                        <div className="text-xs font-bold text-neutral-900 truncate">{tx.note || 'Internal Transfer'}</div>
                         <div className="flex items-center gap-1 mt-0.5">
-                          <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: tx.category?.color || '#334155' }} />
-                          <span className="text-[9px] text-slate-500 truncate">{tx.category?.name || 'Unsorted'}</span>
-                          <span className="text-[8px] text-slate-600 uppercase">· {tx.method || 'cash'}</span>
+                          <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: tx.category?.color || '#94A3B8' }} />
+                          <span className="text-[9px] text-neutral-400 truncate">{tx.category?.name || 'Unsorted'}</span>
+                          <span className="text-[8px] text-neutral-400 uppercase">· {tx.method || 'cash'}</span>
                         </div>
                       </div>
                     </div>
-                    <div className={cn("font-black font-mono text-xs tabular-nums flex-shrink-0", tx.type === 'credit' ? 'text-emerald-400' : 'text-rose-400')}>
+                    <div className={cn("font-black font-mono text-xs tabular-nums flex-shrink-0", tx.type === 'credit' ? 'text-lime-700' : 'text-rose-600')}>
                       {tx.type === 'credit' ? '+' : '-'}{fmt(tx.amount)}
                     </div>
                   </div>
@@ -362,19 +362,19 @@ export default function DashboardPage() {
 
       {/* Bank Activity Section (Pro/Premium only) */}
       {can('bankSync') && bankTxs.length > 0 && (
-        <section className="rounded-[32px] border border-emerald-500/10 bg-gradient-to-br from-emerald-500/5 to-transparent p-8 backdrop-blur-xl shadow-2xl">
+        <section className="rounded-[32px] bg-white p-8 shadow-sm">
           <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-emerald-500/15 flex items-center justify-center">
-                <Building2 className="w-5 h-5 text-emerald-400" />
+              <div className="w-10 h-10 rounded-2xl bg-lime-100 flex items-center justify-center">
+                <Building2 className="w-5 h-5 text-lime-700" />
               </div>
               <div>
-                <h3 className="text-xl font-black text-white tracking-tight">Bank Activity</h3>
-                <p className="text-xs text-slate-400 font-medium">Latest transactions from your connected bank</p>
+                <h3 className="text-xl font-black text-neutral-900 tracking-tight">Bank Activity</h3>
+                <p className="text-xs text-neutral-400 font-medium">Latest transactions from your connected bank</p>
               </div>
             </div>
             <Link href="/dashboard/bank">
-              <Button variant="ghost" className="rounded-2xl px-6 gap-2 text-emerald-400 hover:bg-emerald-400/10">
+              <Button variant="ghost" className="rounded-2xl px-6 gap-2 !text-lime-700 hover:!bg-lime-50">
                 View All <ArrowRight className="w-4 h-4" />
               </Button>
             </Link>
@@ -384,32 +384,32 @@ export default function DashboardPage() {
             {bankTxs.map((tx) => (
               <div
                 key={tx.id}
-                className="flex items-center gap-3 px-4 py-3 rounded-2xl border border-white/5 bg-white/[0.02] hover:bg-white/5 transition"
+                className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-neutral-50 hover:bg-neutral-100 transition"
               >
                 {/* Icon */}
                 <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${
-                  tx.type === 'credit' ? 'bg-emerald-500/15' : 'bg-rose-500/15'
+                  tx.type === 'credit' ? 'bg-lime-100' : 'bg-rose-100'
                 }`}>
                   {tx.type === 'credit'
-                    ? <ArrowDownLeft className="w-4 h-4 text-emerald-400" />
-                    : <ArrowUpRight className="w-4 h-4 text-rose-400" />
+                    ? <ArrowDownLeft className="w-4 h-4 text-lime-700" />
+                    : <ArrowUpRight className="w-4 h-4 text-rose-600" />
                   }
                 </div>
 
                 {/* Details */}
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-semibold text-white truncate">
+                  <p className="text-xs font-semibold text-neutral-900 truncate">
                     {tx.narration || 'Bank Transaction'}
                   </p>
                   <div className="flex items-center gap-2 mt-0.5">
-                    <span className="text-[10px] text-slate-500">
+                    <span className="text-[10px] text-neutral-400">
                       {new Date(tx.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
                     </span>
                     {tx.ai_category_suggestion && (
                       <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full ${
                         tx.is_categorised
-                          ? 'bg-emerald-500/15 text-emerald-400'
-                          : 'bg-violet-500/15 text-violet-400'
+                          ? 'bg-lime-100 text-lime-700'
+                          : 'bg-violet-100 text-violet-700'
                       }`}>
                         {!tx.is_categorised && '✨ '}{tx.ai_category_suggestion}
                       </span>
@@ -419,7 +419,7 @@ export default function DashboardPage() {
 
                 {/* Amount */}
                 <p className={`text-sm font-black flex-shrink-0 ${
-                  tx.type === 'credit' ? 'text-emerald-400' : 'text-rose-400'
+                  tx.type === 'credit' ? 'text-lime-700' : 'text-rose-600'
                 }`}>
                   {tx.type === 'credit' ? '+' : '-'}₹{tx.amount.toLocaleString('en-IN')}
                 </p>

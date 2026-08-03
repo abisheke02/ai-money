@@ -86,7 +86,7 @@ export default function CalculatorPage() {
 
   const btnStyle = (btn: string) => {
     if (btn === '=') return 'bg-gradient-to-br from-emerald-400 to-cyan-500 text-slate-950 font-bold'
-    if (['+', '−', '×', '÷'].includes(btn)) return 'bg-white/10 text-emerald-300 font-bold hover:bg-white/15'
+    if (['+', '−', '×', '÷'].includes(btn)) return 'bg-lime-100 text-lime-700 font-bold hover:bg-lime-200'
     if (['C', '+/-', '%'].includes(btn)) return 'bg-white/10 text-slate-300 hover:bg-white/15'
     if (btn === '⌫') return 'bg-white/10 text-rose-400 hover:bg-rose-500/15'
     return 'bg-slate-800/80 text-white hover:bg-slate-700'
@@ -132,7 +132,7 @@ export default function CalculatorPage() {
                   <div key={i} onClick={() => { const r = parts[1]?.trim(); if (r) { setDisplay(r); setWaitingForNext(true) } }}
                     className="px-3 py-2 cursor-pointer hover:bg-white/5 transition">
                     <p className="text-[10px] text-slate-500">{parts[0]?.trim()} =</p>
-                    <p className="text-sm font-bold font-mono text-emerald-300">{parts[1]?.trim()}</p>
+                    <p className="text-sm font-bold font-mono text-lime-700">{parts[1]?.trim()}</p>
                   </div>
                 )
               })}

@@ -26,8 +26,8 @@ export default function OverallDashboard() {
       .then(r => r.json()).then(setStats).catch(() => setError('Failed to load')).finally(() => setLoading(false))
   }, [])
 
-  if (loading) return <div className="flex items-center justify-center h-32"><div className="w-5 h-5 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin" /></div>
-  if (error || !stats) return <div className="flex flex-col items-center justify-center h-32 text-slate-400 text-xs gap-2"><AlertCircle className="w-6 h-6 text-rose-400" /><p>{error}</p></div>
+  if (loading) return <div className="flex items-center justify-center h-32"><div className="w-5 h-5 border-2 border-lime-500 border-t-transparent rounded-full animate-spin" /></div>
+  if (error || !stats) return <div className="flex flex-col items-center justify-center h-32 text-slate-400 text-xs gap-2"><AlertCircle className="w-6 h-6 text-rose-600" /><p>{error}</p></div>
 
   return (
     <div className="space-y-3">
@@ -37,7 +37,7 @@ export default function OverallDashboard() {
           <p className="text-[10px] text-muted-foreground">Aggregated across all businesses</p>
         </div>
         <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-border/50 bg-secondary/50">
-          <Globe className="w-3 h-3 text-emerald-400" />
+          <Globe className="w-3 h-3 text-lime-700" />
           <span className="text-xs text-muted-foreground">All Businesses</span>
         </div>
       </div>
@@ -45,10 +45,10 @@ export default function OverallDashboard() {
       {/* Grand Totals */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
-          { label: 'Total Income', value: fmt(stats.grandTotal.income), color: 'text-emerald-400', accent: 'border-emerald-500/20 bg-emerald-500/10', icon: ArrowUpRight },
-          { label: 'Total Expense', value: fmt(stats.grandTotal.expense), color: 'text-rose-400', accent: 'border-rose-500/20 bg-rose-500/10', icon: ArrowDownRight },
-          { label: 'Pending', value: (stats.grandTotal.pending < 0 ? '-' : '') + fmt(stats.grandTotal.pending), color: 'text-amber-400', accent: 'border-amber-500/20 bg-amber-500/10', icon: Clock },
-          { label: 'Net Profit', value: (stats.grandTotal.netProfit >= 0 ? '+' : '') + fmt(stats.grandTotal.netProfit), color: stats.grandTotal.netProfit >= 0 ? 'text-cyan-400' : 'text-rose-400', accent: 'border-cyan-500/20 bg-cyan-500/10', icon: Globe },
+          { label: 'Total Income', value: fmt(stats.grandTotal.income), color: 'text-lime-700', accent: 'border-emerald-500/20 bg-emerald-500/10', icon: ArrowUpRight },
+          { label: 'Total Expense', value: fmt(stats.grandTotal.expense), color: 'text-rose-600', accent: 'border-rose-500/20 bg-rose-500/10', icon: ArrowDownRight },
+          { label: 'Pending', value: (stats.grandTotal.pending < 0 ? '-' : '') + fmt(stats.grandTotal.pending), color: 'text-amber-600', accent: 'border-amber-500/20 bg-amber-500/10', icon: Clock },
+          { label: 'Net Profit', value: (stats.grandTotal.netProfit >= 0 ? '+' : '') + fmt(stats.grandTotal.netProfit), color: stats.grandTotal.netProfit >= 0 ? 'text-cyan-700' : 'text-rose-600', accent: 'border-cyan-500/20 bg-cyan-500/10', icon: Globe },
         ].map(({ label, value, color, accent, icon: Icon }) => (
           <div key={label} className={`card ${accent} p-3 flex items-center gap-3 min-w-0`}>
             <div className={`w-8 h-8 rounded-xl bg-background/50 flex items-center justify-center flex-shrink-0 ${color}`}>
@@ -78,13 +78,13 @@ export default function OverallDashboard() {
               </div>
               <div className="grid grid-cols-2 gap-x-4 gap-y-1 pl-9 text-xs">
                 <span className="text-muted-foreground">Income</span>
-                <span className="font-mono text-emerald-400 font-semibold text-right">{fmt(b.income)}</span>
+                <span className="font-mono text-lime-700 font-semibold text-right">{fmt(b.income)}</span>
                 <span className="text-muted-foreground">Expense</span>
-                <span className="font-mono text-rose-400 font-semibold text-right">{fmt(b.expense)}</span>
+                <span className="font-mono text-rose-600 font-semibold text-right">{fmt(b.expense)}</span>
                 <span className="text-muted-foreground">Pending</span>
-                <span className="font-mono text-amber-400 font-semibold text-right">{fmt(b.pending)}</span>
+                <span className="font-mono text-amber-600 font-semibold text-right">{fmt(b.pending)}</span>
                 <span className="text-muted-foreground">Net Profit</span>
-                <span className={`font-mono font-bold text-right ${b.netProfit >= 0 ? 'text-cyan-400' : 'text-rose-400'}`}>{(b.netProfit >= 0 ? '+' : '') + fmt(b.netProfit)}</span>
+                <span className={`font-mono font-bold text-right ${b.netProfit >= 0 ? 'text-cyan-700' : 'text-rose-600'}`}>{(b.netProfit >= 0 ? '+' : '') + fmt(b.netProfit)}</span>
               </div>
             </div>
           ))}
@@ -112,11 +112,11 @@ export default function OverallDashboard() {
                       <span className="text-foreground font-medium">{b.name}</span>
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-right font-mono text-emerald-400 font-semibold">{fmt(b.income)}</td>
-                  <td className="px-4 py-3 text-right font-mono text-rose-400 font-semibold">{fmt(b.expense)}</td>
-                  <td className="px-4 py-3 text-right font-mono text-amber-400 font-semibold">{fmt(b.pending)}</td>
+                  <td className="px-4 py-3 text-right font-mono text-lime-700 font-semibold">{fmt(b.income)}</td>
+                  <td className="px-4 py-3 text-right font-mono text-rose-600 font-semibold">{fmt(b.expense)}</td>
+                  <td className="px-4 py-3 text-right font-mono text-amber-600 font-semibold">{fmt(b.pending)}</td>
                   <td className="px-4 py-3 text-right">
-                    <span className={`flex items-center justify-end gap-1 font-mono font-bold ${b.netProfit >= 0 ? 'text-cyan-400' : 'text-rose-400'}`}>
+                    <span className={`flex items-center justify-end gap-1 font-mono font-bold ${b.netProfit >= 0 ? 'text-cyan-700' : 'text-rose-600'}`}>
                       {b.netProfit >= 0 ? <ArrowUpRight className="w-3.5 h-3.5" /> : <ArrowDownRight className="w-3.5 h-3.5" />}
                       {fmt(b.netProfit)}
                     </span>

@@ -162,8 +162,8 @@ export default function TransactionsPage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 py-4">
           <div>
-            <h1 className="text-3xl font-bold text-white tracking-tight">Transactions</h1>
-            <p className="text-sm text-slate-400 font-medium">Manage and track your financial flow</p>
+            <h1 className="text-3xl font-bold text-neutral-900 tracking-tight">Transactions</h1>
+            <p className="text-sm text-neutral-400 font-medium">Manage and track your financial flow</p>
           </div>
           <div className="flex items-center gap-3">
             {selectedIds.length > 0 && (
@@ -188,16 +188,16 @@ export default function TransactionsPage() {
         {/* Search + Filters */}
         <div className="flex gap-2 items-center">
           <div className="relative flex-1">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3 h-3 text-slate-500" />
-            <input id="search-input" type="text" placeholder="Search notes, tags..." value={filters.search} onChange={e => setFilters(f => ({ ...f, search: e.target.value, page: 1 }))} className="w-full rounded-xl border border-white/10 bg-slate-800/50 pl-8 pr-3 py-1.5 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-emerald-500/50" />
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3 h-3 text-neutral-400" />
+            <input id="search-input" type="text" placeholder="Search notes, tags..." value={filters.search} onChange={e => setFilters(f => ({ ...f, search: e.target.value, page: 1 }))} className="w-full rounded-xl border border-black/10 bg-white pl-8 pr-3 py-1.5 text-xs text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-1 focus:ring-lime-500/50" />
           </div>
-          <button onClick={() => setShowFilters(!showFilters)} className={`flex items-center gap-1 text-xs px-2.5 py-1.5 rounded-xl border transition ${showFilters ? 'bg-emerald-500/20 border-emerald-500/30 text-emerald-300' : 'border-white/10 bg-white/5 text-slate-400'}`}>
+          <button onClick={() => setShowFilters(!showFilters)} className={`flex items-center gap-1 text-xs px-2.5 py-1.5 rounded-xl border transition ${showFilters ? 'bg-lime-100 border-lime-300 text-lime-700' : 'border-black/10 bg-white text-neutral-400'}`}>
             <Filter className="w-3 h-3" /> Filter
           </button>
         </div>
 
         {showFilters && (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-5 rounded-3xl border border-white/5 bg-white/5 backdrop-blur-md animate-fadeIn">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-5 rounded-3xl bg-white shadow-sm animate-fadeIn">
             <Select label="Type" value={filters.type} onChange={e => setFilters(f => ({ ...f, type: e.target.value, page: 1 }))} options={[{ label: 'All Types', value: '' }, { label: 'Credit', value: 'credit' }, { label: 'Debit', value: 'debit' }]} />
             <Select label="Category" value={filters.categoryId} onChange={e => setFilters(f => ({ ...f, categoryId: e.target.value, page: 1 }))} options={[{ label: 'All Categories', value: '' }, ...categories.map(c => ({ label: c.name, value: c.id }))]} />
             <Input label="From Date" type="date" value={filters.startDate} onChange={e => setFilters(f => ({ ...f, startDate: e.target.value, page: 1 }))} />
@@ -206,14 +206,14 @@ export default function TransactionsPage() {
         )}
 
         {/* Table */}
-        <div className="rounded-[32px] border border-white/5 bg-white/5 backdrop-blur-xl overflow-hidden shadow-2xl">
+        <div className="rounded-[32px] bg-white overflow-hidden shadow-sm">
           {loading || businessLoading ? (
             <div className="flex items-center justify-center h-64"><div className="w-8 h-8 border-3 border-primary border-t-transparent rounded-full animate-spin" /></div>
           ) : transactions.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-64 text-slate-500 text-sm gap-4 animate-fadeIn">
-              <div className="p-4 rounded-full bg-white/5 text-slate-600"><Search className="w-8 h-8" /></div>
+            <div className="flex flex-col items-center justify-center h-64 text-neutral-400 text-sm gap-4 animate-fadeIn">
+              <div className="p-4 rounded-full bg-neutral-100 text-neutral-400"><Search className="w-8 h-8" /></div>
               <div className="text-center">
-                <p className="font-semibold text-slate-300">No transactions found</p>
+                <p className="font-semibold text-neutral-600">No transactions found</p>
                 <p className="text-xs">Try adjusting your filters or add a new record.</p>
               </div>
               <Button variant="outline" size="sm" onClick={() => setShowModal(true)}>Add Transaction</Button>
@@ -223,9 +223,9 @@ export default function TransactionsPage() {
               {/* Desktop Table View */}
               <div className="overflow-x-auto hidden lg:block">
                 <table className="w-full border-separate border-spacing-y-2 px-4 py-2">
-                  <thead className="text-[11px] font-black text-slate-500 uppercase tracking-[0.2em]">
+                  <thead className="text-[11px] font-black text-neutral-400 uppercase tracking-[0.2em]">
                     <tr>
-                      <th className="px-4 py-4 text-left w-10"><button onClick={toggleSelectAll} className="p-2 hover:bg-white/5 rounded-xl transition"><Check className={cn("w-4 h-4", selectedIds.length === transactions.length ? "text-primary" : "text-slate-600")} /></button></th>
+                      <th className="px-4 py-4 text-left w-10"><button onClick={toggleSelectAll} className="p-2 hover:bg-black/5 rounded-xl transition"><Check className={cn("w-4 h-4", selectedIds.length === transactions.length ? "text-primary" : "text-neutral-300")} /></button></th>
                       <th className="px-4 py-4 text-left">Timestamp</th>
                       <th className="px-4 py-4 text-left">Description</th>
                       <th className="px-4 py-4 text-left">Category</th>
@@ -236,32 +236,32 @@ export default function TransactionsPage() {
                   </thead>
                   <tbody className="">
                     {transactions.map((tx: Transaction) => (
-                      <tr key={tx.id} className="group bg-slate-900/40 hover:bg-slate-800/60 transition-all duration-300 shadow-sm">
-                        <td className="px-4 py-4 rounded-l-2xl"><button onClick={() => toggleSelect(tx.id)} className="p-2 hover:bg-white/5 rounded-xl transition"><Check className={cn("w-4 h-4", selectedIds.includes(tx.id) ? "text-primary" : "text-slate-600/50 group-hover:text-slate-600")} /></button></td>
+                      <tr key={tx.id} className="group bg-neutral-50 hover:bg-neutral-100 transition-all duration-300">
+                        <td className="px-4 py-4 rounded-l-2xl"><button onClick={() => toggleSelect(tx.id)} className="p-2 hover:bg-black/5 rounded-xl transition"><Check className={cn("w-4 h-4", selectedIds.includes(tx.id) ? "text-primary" : "text-neutral-300 group-hover:text-neutral-400")} /></button></td>
                         <td className="px-4 py-4 whitespace-nowrap">
-                          <div className="text-sm font-bold text-white font-mono">{new Date(tx.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })}</div>
-                          <div className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">{new Date(tx.date).getFullYear()}</div>
+                          <div className="text-sm font-bold text-neutral-900 font-mono">{new Date(tx.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })}</div>
+                          <div className="text-[10px] text-neutral-400 font-bold uppercase tracking-widest">{new Date(tx.date).getFullYear()}</div>
                         </td>
                         <td className="px-4 py-4">
-                          <div className="text-sm font-black text-white truncate max-w-[200px] group-hover:text-primary transition-colors">{tx.note || tx.category?.name || '—'}</div>
-                          {tx.tags && <div className="flex gap-1 mt-1">{tx.tags.split(',').map(tag => <span key={tag} className="text-[9px] px-1.5 py-0.5 rounded-md bg-white/5 text-slate-500 border border-white/5 font-bold">#{tag.trim()}</span>)}</div>}
+                          <div className="text-sm font-black text-neutral-900 truncate max-w-[200px] group-hover:text-lime-700 transition-colors">{tx.note || tx.category?.name || '—'}</div>
+                          {tx.tags && <div className="flex gap-1 mt-1">{tx.tags.split(',').map(tag => <span key={tag} className="text-[9px] px-1.5 py-0.5 rounded-md bg-white text-neutral-400 font-bold">#{tag.trim()}</span>)}</div>}
                         </td>
                         <td className="px-4 py-4">
                           <div className="flex items-center gap-2">
                             <div className="w-2 h-2 rounded-full shadow-lg" style={{ backgroundColor: tx.category?.color || '#ccc' }} />
-                            <span className="text-sm text-slate-300 font-bold">{tx.category?.name || 'Uncategorized'}</span>
+                            <span className="text-sm text-neutral-600 font-bold">{tx.category?.name || 'Uncategorized'}</span>
                           </div>
                         </td>
                         <td className="px-4 py-4">
                            <Badge variant={tx.type as any} className="font-black text-[10px] uppercase">{tx.method || 'Cash'}</Badge>
                         </td>
-                        <td className={cn("px-4 py-4 text-right font-black text-base font-mono tabular-nums", tx.type === 'credit' ? "text-emerald-400" : "text-rose-400")}>
+                        <td className={cn("px-4 py-4 text-right font-black text-base font-mono tabular-nums", tx.type === 'credit' ? "text-lime-700" : "text-rose-600")}>
                           {tx.type === 'credit' ? '+' : '-'}{fmt(tx.amount)}
                         </td>
                         <td className="px-4 py-4 text-right rounded-r-2xl">
                           <div className="flex gap-1 justify-end opacity-0 group-hover:opacity-100 transition-all">
-                            <button onClick={() => handleEdit(tx)} className="p-2.5 text-slate-500 hover:text-white hover:bg-white/10 rounded-xl transition"><Edit2 className="w-4 h-4" /></button>
-                            <button onClick={() => handleDelete(tx)} className="p-2.5 text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 rounded-xl transition"><Trash2 className="w-4 h-4" /></button>
+                            <button onClick={() => handleEdit(tx)} className="p-2.5 text-neutral-400 hover:text-neutral-900 hover:bg-black/5 rounded-xl transition"><Edit2 className="w-4 h-4" /></button>
+                            <button onClick={() => handleDelete(tx)} className="p-2.5 text-neutral-400 hover:text-rose-600 hover:bg-rose-500/10 rounded-xl transition"><Trash2 className="w-4 h-4" /></button>
                           </div>
                         </td>
                       </tr>
@@ -271,37 +271,37 @@ export default function TransactionsPage() {
               </div>
 
               {/* Mobile List View - Single Page Layout, No Horizontal Scroll */}
-              <div className="block lg:hidden divide-y divide-white/5 px-1 space-y-1.5">
+              <div className="block lg:hidden divide-y divide-black/5 px-1 space-y-1.5">
                 {transactions.map((tx: Transaction) => (
-                  <div key={tx.id} className="py-2 px-2.5 bg-slate-900/40 rounded-xl border border-white/5 flex items-center justify-between gap-2">
+                  <div key={tx.id} className="py-2 px-2.5 bg-neutral-50 rounded-xl flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2 min-w-0">
                       {/* Type dot */}
-                      <div className={`w-2 h-2 rounded-full flex-shrink-0 ${tx.type === 'credit' ? 'bg-emerald-500' : 'bg-rose-500'}`} />
+                      <div className={`w-2 h-2 rounded-full flex-shrink-0 ${tx.type === 'credit' ? 'bg-lime-500' : 'bg-rose-500'}`} />
 
                       {/* Date */}
                       <div className="flex-shrink-0 text-center w-8">
-                        <div className="text-[10px] font-black text-white font-mono leading-tight">{new Date(tx.date).toLocaleDateString('en-GB', { day: '2-digit' })}</div>
-                        <div className="text-[8px] text-slate-500 font-bold uppercase leading-tight">{new Date(tx.date).toLocaleDateString('en-GB', { month: 'short' })}</div>
+                        <div className="text-[10px] font-black text-neutral-900 font-mono leading-tight">{new Date(tx.date).toLocaleDateString('en-GB', { day: '2-digit' })}</div>
+                        <div className="text-[8px] text-neutral-400 font-bold uppercase leading-tight">{new Date(tx.date).toLocaleDateString('en-GB', { month: 'short' })}</div>
                       </div>
 
                       {/* Note + category */}
                       <div className="min-w-0 flex-1">
-                        <div className="text-xs font-bold text-white truncate">{tx.note || tx.category?.name || '—'}</div>
+                        <div className="text-xs font-bold text-neutral-900 truncate">{tx.note || tx.category?.name || '—'}</div>
                         <div className="flex items-center gap-1 mt-0.5">
                           <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: tx.category?.color || '#ccc' }} />
-                          <span className="text-[9px] text-slate-500 truncate">{tx.category?.name || 'Uncategorized'}</span>
-                          <span className="text-[8px] text-slate-600 uppercase">· {tx.method || 'cash'}</span>
+                          <span className="text-[9px] text-neutral-400 truncate">{tx.category?.name || 'Uncategorized'}</span>
+                          <span className="text-[8px] text-neutral-400 uppercase">· {tx.method || 'cash'}</span>
                         </div>
                       </div>
                     </div>
 
                     {/* Amount & Actions */}
                     <div className="flex items-center gap-1.5 flex-shrink-0">
-                      <div className={cn("font-black text-xs font-mono tabular-nums", tx.type === 'credit' ? "text-emerald-400" : "text-rose-400")}>
+                      <div className={cn("font-black text-xs font-mono tabular-nums", tx.type === 'credit' ? "text-lime-700" : "text-rose-600")}>
                         {tx.type === 'credit' ? '+' : '-'}{fmt(tx.amount)}
                       </div>
-                      <button onClick={() => handleEdit(tx)} className="p-1.5 text-slate-600 hover:text-white rounded-lg transition-colors"><Edit2 className="w-3 h-3" /></button>
-                      <button onClick={() => handleDelete(tx)} className="p-1.5 text-slate-600 hover:text-rose-400 rounded-lg transition-colors"><Trash2 className="w-3 h-3" /></button>
+                      <button onClick={() => handleEdit(tx)} className="p-1.5 text-neutral-400 hover:text-neutral-900 rounded-lg transition-colors"><Edit2 className="w-3 h-3" /></button>
+                      <button onClick={() => handleDelete(tx)} className="p-1.5 text-neutral-400 hover:text-rose-600 rounded-lg transition-colors"><Trash2 className="w-3 h-3" /></button>
                     </div>
                   </div>
                 ))}
@@ -309,11 +309,11 @@ export default function TransactionsPage() {
 
               {/* Pagination controls (Universal) */}
               {totalPages > 1 && (
-                <div className="flex items-center justify-between px-6 py-4 border-t border-white/5 bg-black/20 rounded-b-[32px]">
-                  <span className="text-[10px] text-slate-500 font-black uppercase tracking-widest">Page <span className="text-white">{filters.page}</span> of {totalPages}</span>
+                <div className="flex items-center justify-between px-6 py-4 border-t border-black/5 bg-neutral-50 rounded-b-[32px]">
+                  <span className="text-[10px] text-neutral-400 font-black uppercase tracking-widest">Page <span className="text-neutral-900">{filters.page}</span> of {totalPages}</span>
                   <div className="flex gap-2">
-                    <Button variant="outline" size="sm" onClick={() => setFilters(f => ({ ...f, page: f.page - 1 }))} disabled={filters.page === 1} className="px-3 rounded-xl border-white/5"><ChevronLeft className="w-4 h-4" /></Button>
-                    <Button variant="outline" size="sm" onClick={() => setFilters(f => ({ ...f, page: f.page + 1 }))} disabled={filters.page === totalPages} className="px-3 rounded-xl border-white/5"><ChevronRight className="w-4 h-4" /></Button>
+                    <Button variant="outline" size="sm" onClick={() => setFilters(f => ({ ...f, page: f.page - 1 }))} disabled={filters.page === 1} className="px-3 rounded-xl"><ChevronLeft className="w-4 h-4" /></Button>
+                    <Button variant="outline" size="sm" onClick={() => setFilters(f => ({ ...f, page: f.page + 1 }))} disabled={filters.page === totalPages} className="px-3 rounded-xl"><ChevronRight className="w-4 h-4" /></Button>
                   </div>
                 </div>
               )}
@@ -397,12 +397,12 @@ export default function TransactionsPage() {
       </Modal>
 
       {toast && isMounted && createPortal(
-        <div className={`fixed bottom-6 left-1/2 -translate-x-1/2 border px-5 py-2.5 rounded-full shadow-2xl z-[60] flex items-center gap-3 text-sm animate-slideIn ${
-          toast.type === 'error' ? 'bg-rose-900 border-rose-500 text-rose-100' : 'bg-slate-900 border-white/10 text-white'
+        <div className={`fixed bottom-6 left-1/2 -translate-x-1/2 px-5 py-2.5 rounded-full shadow-2xl z-[60] flex items-center gap-3 text-sm animate-slideIn ${
+          toast.type === 'error' ? 'bg-rose-600 text-white' : 'bg-neutral-900 text-neutral-50'
         }`}>
           <span>{toast.message}</span>
-          {toast.type === 'undo' && <button onClick={handleUndoDelete} className="text-emerald-400 font-bold hover:text-emerald-300">Undo</button>}
-          <button onClick={() => setToast(null)} className="ml-2 text-white/40 hover:text-white"><X className="w-3 h-3" /></button>
+          {toast.type === 'undo' && <button onClick={handleUndoDelete} className="text-lime-400 font-bold hover:text-lime-300">Undo</button>}
+          <button onClick={() => setToast(null)} className="ml-2 text-neutral-400 hover:text-neutral-50"><X className="w-3 h-3" /></button>
         </div>,
         document.body
       )}

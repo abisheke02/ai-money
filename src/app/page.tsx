@@ -1,8 +1,43 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { motion, useReducedMotion, animate } from 'framer-motion'
+
+function RevealWords({ text, reducedMotion, startDelay = 0 }: { text: string; reducedMotion: boolean; startDelay?: number }) {
+  const words = text.split(' ')
+  return (
+    <>
+      {words.map((word, i) => (
+        <motion.span
+          key={i}
+          initial={reducedMotion ? undefined : { opacity: 0, filter: 'blur(16px)', y: 14 }}
+          animate={reducedMotion ? undefined : { opacity: 1, filter: 'blur(0px)', y: 0 }}
+          transition={{ duration: 0.65, delay: startDelay + i * 0.13, ease: [0.22, 1, 0.36, 1] }}
+          className="inline-block"
+        >
+          {word}{i < words.length - 1 ? ' ' : ''}
+        </motion.span>
+      ))}
+    </>
+  )
+}
+
+function useCountUp(target: number, reducedMotion: boolean, delay = 0) {
+  const [value, setValue] = useState(reducedMotion ? target : 0)
+  useEffect(() => {
+    if (reducedMotion) { setValue(target); return }
+    const controls = animate(0, target, {
+      duration: 1.4,
+      delay,
+      ease: [0.22, 1, 0.36, 1],
+      onUpdate: (v) => setValue(Math.round(v)),
+    })
+    return () => controls.stop()
+  }, [target, reducedMotion, delay])
+  return value
+}
 import {
   Wallet, Receipt, BarChart3, Sparkles, TrendingUp, Brain,
   Shield, Lock, CheckCircle, Globe, ArrowRight, Star, Zap,
@@ -178,6 +213,16 @@ const featureSections = [
 export default function LandingPage() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [spotlight, setSpotlight] = useState({ x: 0, y: 0, active: false })
+  const heroRef = useRef<HTMLElement>(null)
+  const reducedMotion = !!useReducedMotion()
+  const balanceCount = useCountUp(145230, reducedMotion, 0.5)
+
+  const handleHeroMouseMove = (e: React.MouseEvent<HTMLElement>) => {
+    if (reducedMotion || !heroRef.current) return
+    const rect = heroRef.current.getBoundingClientRect()
+    setSpotlight({ x: e.clientX - rect.left, y: e.clientY - rect.top, active: true })
+  }
 
   useEffect(() => {
     // Native Capacitor app: skip marketing page, go straight to login or dashboard
@@ -204,9 +249,9 @@ export default function LandingPage() {
           </Link>
 
           <div className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-400">
-            <a href="#features" className="hover:text-white transition-colors">Features</a>
-            <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
-            <a href="#security" className="hover:text-white transition-colors">Security</a>
+            <a href="#features" className="hover-underline hover:text-white transition-colors">Features</a>
+            <a href="#pricing" className="hover-underline hover:text-white transition-colors">Pricing</a>
+            <a href="#security" className="hover-underline hover:text-white transition-colors">Security</a>
           </div>
 
           <div className="hidden md:flex items-center gap-3">
@@ -241,12 +286,29 @@ export default function LandingPage() {
       </nav>
 
       {/* ── HERO ── */}
-      <section className="relative min-h-screen flex items-center overflow-hidden">
+      <section
+        ref={heroRef}
+        onMouseMove={handleHeroMouseMove}
+        onMouseLeave={() => setSpotlight(s => ({ ...s, active: false }))}
+        className="relative min-h-screen flex items-center overflow-hidden"
+      >
         {/* Background glows */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-1/4 -left-40 w-[900px] h-[900px] bg-emerald-500/6 rounded-full blur-[180px]" />
           <div className="absolute bottom-0 right-0 w-[700px] h-[700px] bg-cyan-500/5 rounded-full blur-[160px]" />
         </div>
+
+        {/* Cursor-reactive spotlight */}
+        {!reducedMotion && (
+          <div
+            className="absolute inset-0 pointer-events-none transition-opacity duration-500"
+            style={{
+              opacity: spotlight.active ? 1 : 0,
+              background: `radial-gradient(560px circle at ${spotlight.x}px ${spotlight.y}px, rgba(16,185,129,0.16), rgba(6,182,212,0.08) 45%, transparent 70%)`,
+              mixBlendMode: 'screen',
+            }}
+          />
+        )}
 
         <div className="w-full max-w-7xl mx-auto px-6 lg:px-10 pt-20 pb-10 lg:py-16 grid grid-cols-1 lg:grid-cols-[1fr_1.15fr] gap-10 lg:gap-16 items-center">
 
@@ -258,9 +320,16 @@ export default function LandingPage() {
             </div>
 
             <h1 className="text-5xl md:text-6xl lg:text-[4.5rem] xl:text-[5.5rem] font-black leading-[0.9] tracking-tight">
-              <span className="text-white">Manage your</span>
+              <span className="text-white"><RevealWords text="Manage your" reducedMotion={reducedMotion} /></span>
               <br />
-              <span className="bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 bg-clip-text text-transparent">money smarter.</span>
+              <motion.span
+                initial={reducedMotion ? undefined : { opacity: 0, filter: 'blur(16px)', y: 14 }}
+                animate={reducedMotion ? undefined : { opacity: 1, filter: 'blur(0px)', y: 0 }}
+                transition={{ duration: 0.65, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                className="animate-gradient-text bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 bg-clip-text text-transparent inline-block"
+              >
+                money smarter.
+              </motion.span>
             </h1>
 
             <p className="text-lg lg:text-xl text-slate-400 leading-relaxed max-w-lg">
@@ -269,7 +338,7 @@ export default function LandingPage() {
 
             <div className="flex flex-col sm:flex-row gap-4">
               <Link href="/auth/register"
-                className="flex items-center justify-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-emerald-400 to-cyan-500 text-slate-950 font-black text-base shadow-2xl shadow-emerald-500/25 hover:opacity-90 transition-all active:scale-95">
+                className="ripple relative overflow-hidden flex items-center justify-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-emerald-400 to-cyan-500 text-slate-950 font-black text-base shadow-2xl shadow-emerald-500/25 hover:opacity-90 transition-all active:scale-95">
                 Start for Free <ArrowRight className="w-5 h-5" />
               </Link>
               <Link href="/auth/login"
@@ -293,8 +362,12 @@ export default function LandingPage() {
             </div>
 
             {/* Phone frame */}
-            <div className="relative z-10 w-[300px] lg:w-[340px] xl:w-[380px]">
-              <div className="relative w-full" style={{paddingBottom: '210%'}}>
+            <motion.div
+              initial={reducedMotion ? undefined : { opacity: 0, y: 30, scale: 0.96 }}
+              animate={reducedMotion ? undefined : { opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+              className="relative z-10 w-[300px] lg:w-[340px] xl:w-[380px]">
+              <div className="card-3d relative w-full" style={{paddingBottom: '210%'}}>
                 <div className="absolute inset-0 bg-[#0d1321] rounded-[52px] border-[5px] border-slate-600/70 shadow-[0_80px_160px_rgba(0,0,0,0.8),0_0_0_1px_rgba(255,255,255,0.06)] overflow-hidden">
                   {/* Notch */}
                   <div className="absolute top-0 inset-x-0 h-9 bg-[#0d1321] flex items-center justify-center z-10">
@@ -317,7 +390,7 @@ export default function LandingPage() {
                     <p className="text-[11px] font-black text-slate-500 uppercase tracking-[0.15em]">Dashboard</p>
                     <div className="rounded-2xl bg-gradient-to-br from-emerald-500/20 to-cyan-500/10 border border-emerald-500/25 p-5">
                       <p className="text-[10px] text-slate-400">Total Balance</p>
-                      <p className="text-3xl font-black text-white mt-1 tracking-tight">₹1,45,230</p>
+                      <p className="text-3xl font-black text-white mt-1 tracking-tight tabular-nums">₹{balanceCount.toLocaleString('en-IN')}</p>
                       <p className="text-[10px] text-emerald-400 font-bold mt-1">↑ +12.5% vs last month</p>
                     </div>
                     <div className="grid grid-cols-2 gap-3">
@@ -337,7 +410,10 @@ export default function LandingPage() {
                       </div>
                       <div className="flex items-end gap-0.5 h-16">
                         {[30,45,35,60,45,70,55,80,65,75,90,85].map((h,i) => (
-                          <div key={i} className="flex-1 rounded-t-sm"
+                          <motion.div key={i} className="flex-1 rounded-t-sm origin-bottom"
+                            initial={reducedMotion ? undefined : { scaleY: 0 }}
+                            animate={reducedMotion ? undefined : { scaleY: 1 }}
+                            transition={{ duration: 0.5, delay: 0.9 + i * 0.04, ease: [0.22, 1, 0.36, 1] }}
                             style={{height:`${h}%`, background: i >= 9 ? '#10b981' : 'rgba(16,185,129,0.2)'}} />
                         ))}
                       </div>
@@ -349,12 +425,16 @@ export default function LandingPage() {
                           {name:'Office Supplies', pct:40, color:'bg-cyan-500'},
                           {name:'Marketing', pct:27, color:'bg-violet-500'},
                           {name:'Travel', pct:20, color:'bg-amber-500'},
-                        ].map(c => (
+                        ].map((c, i) => (
                           <div key={c.name} className="flex items-center gap-2">
                             <div className={`w-2 h-2 rounded-full ${c.color} flex-shrink-0`} />
                             <span className="text-[9px] text-slate-400 flex-1">{c.name}</span>
-                            <div className="w-20 h-1.5 bg-slate-700 rounded-full">
-                              <div className={`h-full ${c.color} rounded-full`} style={{width:`${c.pct}%`}} />
+                            <div className="w-20 h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                              <motion.div className={`h-full ${c.color} rounded-full origin-left`}
+                                initial={reducedMotion ? undefined : { scaleX: 0 }}
+                                animate={reducedMotion ? undefined : { scaleX: 1 }}
+                                transition={{ duration: 0.6, delay: 1.3 + i * 0.15, ease: [0.22, 1, 0.36, 1] }}
+                                style={{width:`${c.pct}%`}} />
                             </div>
                           </div>
                         ))}
@@ -374,7 +454,10 @@ export default function LandingPage() {
               </div>
 
               {/* Floating stat badges — tucked inside the phone width */}
-              <div className="absolute right-0 top-16 translate-x-1/3 bg-[#131c2e]/95 backdrop-blur border border-white/10 rounded-2xl p-4 shadow-2xl w-40 z-20">
+              <motion.div
+                animate={reducedMotion ? undefined : { y: [0, -10, 0] }}
+                transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
+                className="absolute right-0 top-16 translate-x-1/3 bg-[#131c2e]/95 backdrop-blur border border-white/10 rounded-2xl p-4 shadow-2xl w-40 z-20">
                 <p className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Monthly Growth</p>
                 <p className="text-emerald-400 font-black text-2xl mt-1">+12.5%</p>
                 <div className="flex items-end gap-0.5 h-6 mt-2">
@@ -382,14 +465,17 @@ export default function LandingPage() {
                     <div key={i} className="flex-1 bg-emerald-500 rounded-sm opacity-70" style={{height:`${h*2}px`}} />
                   ))}
                 </div>
-              </div>
+              </motion.div>
 
-              <div className="absolute left-0 bottom-36 -translate-x-1/3 bg-[#131c2e]/95 backdrop-blur border border-white/10 rounded-2xl p-4 shadow-2xl w-44 z-20">
+              <motion.div
+                animate={reducedMotion ? undefined : { y: [0, 10, 0] }}
+                transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 0.6 }}
+                className="absolute left-0 bottom-36 -translate-x-1/3 bg-[#131c2e]/95 backdrop-blur border border-white/10 rounded-2xl p-4 shadow-2xl w-44 z-20">
                 <p className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Net Profit</p>
                 <p className="text-cyan-400 font-black text-xl mt-1">₹1,45,230</p>
                 <p className="text-[9px] text-emerald-400 font-semibold mt-1">↑ Positive cash flow</p>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -419,7 +505,14 @@ export default function LandingPage() {
           const isEven = i % 2 === 1
 
           return (
-            <div key={i} className={`py-28 px-6 lg:px-10 ${i % 2 === 1 ? 'bg-white/[0.015]' : ''} border-b border-white/5`}>
+            <motion.div
+              key={i}
+              initial={reducedMotion ? undefined : { opacity: 0, y: 24 }}
+              whileInView={reducedMotion ? undefined : { opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-80px' }}
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              className={`py-28 px-6 lg:px-10 ${i % 2 === 1 ? 'bg-white/[0.015]' : ''} border-b border-white/5`}
+            >
               <div className={`max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center ${isEven ? 'lg:flex-row-reverse' : ''}`}
                 style={isEven ? {direction: 'rtl'} : {}}>
 
@@ -443,7 +536,7 @@ export default function LandingPage() {
                     ))}
                   </ul>
                   <Link href="/auth/register"
-                    className={`inline-flex items-center gap-2 text-sm font-bold ${c.bullet} hover:opacity-80 transition`}>
+                    className={`hover-underline inline-flex items-center gap-2 text-sm font-bold ${c.bullet} hover:opacity-80 transition w-fit`}>
                     Try it free <ArrowRight className="w-4 h-4" />
                   </Link>
                 </div>
@@ -453,7 +546,7 @@ export default function LandingPage() {
                   {feat.visual}
                 </div>
               </div>
-            </div>
+            </motion.div>
           )
         })}
       </section>
@@ -463,7 +556,7 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <p className="text-emerald-400 font-black text-xs uppercase tracking-[0.4em] mb-4">Pricing</p>
-            <h2 className="text-4xl md:text-5xl font-black tracking-tight">Start free. Upgrade when ready.</h2>
+            <h2 className="text-4xl md:text-5xl font-black tracking-tight">Start free. <span className="wow-underline">Upgrade when ready.</span></h2>
             <p className="text-slate-400 mt-4 text-lg">No hidden fees. Cancel anytime.</p>
           </div>
 
@@ -475,6 +568,7 @@ export default function LandingPage() {
                 features: ['1 Business', 'Basic Dashboard', 'Transactions', 'Calculator'],
                 locked: ['Reports', 'Receivables', 'AI Advisor'],
                 cta: 'Get Started Free', ctaStyle: 'bg-slate-700/80 text-white hover:bg-slate-700 border border-white/10',
+                glow: 'hover:shadow-xl hover:shadow-white/5',
               },
               {
                 name: 'Pro', price: '₹199', period: '/month',
@@ -484,6 +578,7 @@ export default function LandingPage() {
                 locked: ['AI Advisor'],
                 cta: 'Get Pro', ctaStyle: 'bg-cyan-500 text-slate-950 hover:bg-cyan-400 shadow-lg shadow-cyan-500/30',
                 note: 'Annual: ₹1,788 — Save ₹600',
+                glow: 'hover:shadow-xl hover:shadow-cyan-500/20',
               },
               {
                 name: 'Premium', price: '₹499', period: '/month',
@@ -493,17 +588,18 @@ export default function LandingPage() {
                 locked: [],
                 cta: 'Get Premium', ctaStyle: 'bg-gradient-to-r from-amber-500 to-rose-500 text-white hover:opacity-90 shadow-lg shadow-amber-500/30',
                 note: 'Annual: ₹3,588 — Save ₹2,400',
+                glow: 'hover:shadow-xl hover:shadow-amber-500/20',
               },
             ].map((plan: any) => (
               <div key={plan.name}
-                className={`relative rounded-3xl border ${plan.border} ${plan.bg} p-8 flex flex-col gap-6 hover:-translate-y-1 transition-transform duration-300`}>
+                className={`group card-shine relative rounded-3xl border ${plan.border} ${plan.bg} p-8 flex flex-col gap-6 transition-all duration-300 hover:-translate-y-1 ${plan.glow}`}>
                 {plan.badge && (
                   <div className={`absolute -top-3.5 left-1/2 -translate-x-1/2 px-5 py-1.5 rounded-full text-[10px] font-black text-white uppercase tracking-wider ${plan.badgeBg}`}>
                     {plan.badge}
                   </div>
                 )}
                 <div className="flex items-center gap-3 mt-2">
-                  <div className={`w-11 h-11 rounded-2xl ${plan.bg} border ${plan.border} flex items-center justify-center`}>
+                  <div className={`w-11 h-11 rounded-2xl ${plan.bg} border ${plan.border} flex items-center justify-center transition-transform duration-300 group-hover:scale-110`}>
                     <plan.icon className={`w-5 h-5 ${plan.color}`} />
                   </div>
                   <p className={`text-sm font-black uppercase tracking-widest ${plan.color}`}>{plan.name}</p>
@@ -542,16 +638,16 @@ export default function LandingPage() {
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <p className="text-emerald-400 font-black text-xs uppercase tracking-[0.4em] mb-4">Trust & Security</p>
-            <h2 className="text-4xl md:text-5xl font-black tracking-tight">Your data is safe with us</h2>
+            <h2 className="text-4xl md:text-5xl font-black tracking-tight">Your data is <span className="wow-underline">safe with us</span></h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
-              { icon: Shield,       title: 'Bank-grade Security',  desc: 'SSL encryption and secure password hashing protect every byte of your financial data.',                color: 'text-emerald-400', bg: 'bg-emerald-500/8', border: 'border-emerald-500/20' },
-              { icon: Lock,         title: 'Your Data, Private',   desc: 'We never sell or share your financial information. Your data belongs to you, always.',              color: 'text-cyan-400',    bg: 'bg-cyan-500/8',    border: 'border-cyan-500/20' },
-              { icon: CheckCircle,  title: '99.9% Uptime',         desc: 'Built for reliability on enterprise infrastructure. Your data is always available when you need it.', color: 'text-amber-400',   bg: 'bg-amber-500/8',   border: 'border-amber-500/20' },
-            ].map(({ icon: Icon, title, desc, color, bg, border }) => (
-              <div key={title} className={`rounded-3xl border ${border} ${bg} p-8 space-y-4`}>
-                <div className={`w-14 h-14 rounded-2xl ${bg} border ${border} flex items-center justify-center`}>
+              { icon: Shield,       title: 'Bank-grade Security',  desc: 'SSL encryption and secure password hashing protect every byte of your financial data.',                color: 'text-emerald-400', bg: 'bg-emerald-500/8', border: 'border-emerald-500/20', glow: 'hover:shadow-emerald-500/20' },
+              { icon: Lock,         title: 'Your Data, Private',   desc: 'We never sell or share your financial information. Your data belongs to you, always.',              color: 'text-cyan-400',    bg: 'bg-cyan-500/8',    border: 'border-cyan-500/20', glow: 'hover:shadow-cyan-500/20' },
+              { icon: CheckCircle,  title: '99.9% Uptime',         desc: 'Built for reliability on enterprise infrastructure. Your data is always available when you need it.', color: 'text-amber-400',   bg: 'bg-amber-500/8',   border: 'border-amber-500/20', glow: 'hover:shadow-amber-500/20' },
+            ].map(({ icon: Icon, title, desc, color, bg, border, glow }) => (
+              <div key={title} className={`group card-shine rounded-3xl border ${border} ${bg} p-8 space-y-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl ${glow}`}>
+                <div className={`w-14 h-14 rounded-2xl ${bg} border ${border} flex items-center justify-center transition-transform duration-300 group-hover:scale-110`}>
                   <Icon className={`w-7 h-7 ${color}`} />
                 </div>
                 <p className={`text-base font-black ${color}`}>{title}</p>
@@ -564,7 +660,7 @@ export default function LandingPage() {
 
       {/* ── FINAL CTA ── */}
       <section className="py-32 px-6 lg:px-10 text-center relative overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-emerald-500/6 rounded-full blur-[120px] pointer-events-none" />
+        <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-gradient-to-br from-emerald-500/10 via-cyan-500/6 to-transparent rounded-full blur-[120px] pointer-events-none ${reducedMotion ? '' : 'animate-mesh'}`} />
         <div className="relative max-w-3xl mx-auto space-y-8">
           <Image src="/logos/moneylix-mark.svg" alt="Moneylix" width={64} height={64} className="mx-auto rounded-3xl" />
           <h2 className="text-4xl md:text-6xl font-black tracking-tight leading-tight">
@@ -574,10 +670,27 @@ export default function LandingPage() {
           <p className="text-xl text-slate-400 max-w-xl mx-auto">
             Join freelancers and business owners who use Moneylix to track, save, and grow.
           </p>
-          <Link href="/auth/register"
-            className="inline-flex items-center gap-3 px-10 py-5 rounded-2xl bg-gradient-to-r from-emerald-400 to-cyan-500 text-slate-950 font-black text-lg shadow-2xl shadow-emerald-500/25 hover:opacity-90 transition-all active:scale-95">
-            Create Free Account <ArrowRight className="w-5 h-5" />
-          </Link>
+
+          <div className="relative inline-flex">
+            {!reducedMotion && (
+              <motion.span
+                className="absolute inset-0 rounded-2xl bg-emerald-400 blur-xl"
+                animate={{ scale: [1, 1.18, 1], opacity: [0.35, 0.55, 0.35] }}
+                transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
+              />
+            )}
+            <div className="conic-border rounded-2xl p-[2px] relative">
+              <Link href="/auth/register"
+                className="ripple relative overflow-hidden inline-flex items-center gap-3 px-10 py-5 rounded-2xl bg-gradient-to-r from-emerald-400 to-cyan-500 text-slate-950 font-black text-lg shadow-2xl shadow-emerald-500/25 hover:opacity-90 transition-all active:scale-95">
+                {!reducedMotion && (
+                  <span className="absolute inset-0 -translate-x-full animate-[shineSweep_2.8s_ease-in-out_infinite] bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+                )}
+                <span className="relative">Create Free Account</span>
+                <ArrowRight className="w-5 h-5 relative" />
+              </Link>
+            </div>
+          </div>
+
           <p className="text-xs text-slate-600">No credit card required · Free plan forever available · 🇮🇳 Made for India</p>
         </div>
       </section>
@@ -593,10 +706,10 @@ export default function LandingPage() {
             <Globe className="w-4 h-4" /> www.moneylix.in &nbsp;·&nbsp; 🇮🇳 Made for India
           </p>
           <div className="flex items-center gap-8 text-sm text-slate-500">
-            <a href="#features" className="hover:text-white transition">Features</a>
-            <a href="#pricing" className="hover:text-white transition">Pricing</a>
-            <Link href="/auth/login" className="hover:text-white transition">Login</Link>
-            <Link href="/auth/register" className="hover:text-white transition">Register</Link>
+            <a href="#features" className="hover-underline hover:text-white transition">Features</a>
+            <a href="#pricing" className="hover-underline hover:text-white transition">Pricing</a>
+            <Link href="/auth/login" className="hover-underline hover:text-white transition">Login</Link>
+            <Link href="/auth/register" className="hover-underline hover:text-white transition">Register</Link>
           </div>
         </div>
         <div className="max-w-7xl mx-auto mt-8 pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">

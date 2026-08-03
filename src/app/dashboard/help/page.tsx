@@ -108,7 +108,7 @@ export default function HelpPage() {
 
       {/* FAQ sections */}
       {faqs.map(({ category, icon: Icon, color, bg, items }) => (
-        <div key={category} className="rounded-2xl border border-white/10 bg-white/5 overflow-hidden">
+        <div key={category} className="rounded-2xl bg-white shadow-sm overflow-hidden">
           <div className="flex items-center gap-3 px-5 py-4 border-b border-white/5">
             <div className={`w-8 h-8 rounded-xl ${bg} flex items-center justify-center`}>
               <Icon className={`w-4 h-4 ${color}`} />
@@ -141,7 +141,7 @@ export default function HelpPage() {
       ))}
 
       {/* Support ticket */}
-      <div className="rounded-2xl border border-white/10 bg-white/5 overflow-hidden">
+      <div className="rounded-2xl bg-white shadow-sm overflow-hidden">
         <div className="flex items-center gap-3 px-5 py-4 border-b border-white/5">
           <div className="w-8 h-8 rounded-xl bg-rose-500/10 flex items-center justify-center">
             <MessageSquare className="w-4 h-4 text-rose-400" />
@@ -204,7 +204,7 @@ export default function HelpPage() {
       </div>
 
       {/* Contact info */}
-      <div className="flex items-center gap-3 px-5 py-4 rounded-2xl border border-white/10 bg-white/5">
+      <div className="flex items-center gap-3 px-5 py-4 rounded-2xl bg-white shadow-sm">
         <Mail className="w-5 h-5 text-slate-400 flex-shrink-0" />
         <div>
           <p className="text-xs font-bold text-white">Email Support</p>

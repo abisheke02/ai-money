@@ -187,7 +187,7 @@ export default function SettingsPage() {
       {/* Quick Links */}
       <div className="grid grid-cols-2 gap-3">
         {quickLinks.map(({ href, icon: Icon, label, desc, color, bg }) => (
-          <Link key={href} href={href} className="rounded-2xl border border-white/10 bg-white/5 p-4 flex flex-col gap-2 active:scale-95 transition-all">
+          <Link key={href} href={href} className="rounded-2xl bg-white shadow-sm p-4 flex flex-col gap-2 active:scale-95 transition-all">
             <div className={`w-9 h-9 rounded-xl ${bg} flex items-center justify-center`}>
               <Icon className={`w-5 h-5 ${color}`} />
             </div>
@@ -203,7 +203,7 @@ export default function SettingsPage() {
       <BankSyncCard />
 
       {/* Currency */}
-      <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
+      <div className="rounded-2xl bg-white shadow-sm p-3">
         <p className="text-xs font-semibold text-white mb-2">Currency</p>
         <CurrencySelector />
       </div>
@@ -211,9 +211,9 @@ export default function SettingsPage() {
       {/* Data sections */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         {sections.map(({ icon, title, desc, content }) => (
-          <div key={title} className="rounded-2xl border border-white/10 bg-white/5 p-3">
+          <div key={title} className="rounded-2xl bg-white shadow-sm p-3">
             <div className="flex items-center gap-2 mb-0.5">
-              <div className="w-6 h-6 rounded-lg bg-white/5 flex items-center justify-center">{icon}</div>
+              <div className="w-6 h-6 rounded-lg bg-neutral-100 flex items-center justify-center">{icon}</div>
               <p className="text-xs font-semibold text-white">{title}</p>
             </div>
             <p className="text-[10px] text-slate-400 ml-8">{desc}</p>

@@ -73,7 +73,7 @@ export default function PricingPage() {
   return (
     <div className="space-y-3">
       {successPlan && (
-        <div className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-sm font-semibold">
+        <div className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-lime-100 text-lime-700 text-sm font-semibold">
           <CheckCircle className="w-5 h-5 flex-shrink-0" />
           Payment successful! You are now on the {successPlan.toUpperCase()} plan.
         </div>
@@ -89,16 +89,16 @@ export default function PricingPage() {
 
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-base font-bold text-white">Plans & Pricing</h1>
-          <p className="text-[10px] text-slate-400">Choose the plan that fits your needs</p>
+          <h1 className="text-base font-bold text-neutral-900">Plans & Pricing</h1>
+          <p className="text-[10px] text-neutral-400">Choose the plan that fits your needs</p>
         </div>
         {/* Billing Toggle */}
-        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-white/5 border border-white/10">
+        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-white shadow-sm">
           {(['monthly', 'halfyearly', 'annual'] as Billing[]).map(b => (
             <button key={b} onClick={() => setBilling(b)}
-              className={`relative px-3 py-1.5 rounded-lg text-[10px] font-black transition ${billing === b ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'text-slate-400 hover:text-white'}`}>
+              className={`relative px-3 py-1.5 rounded-lg text-[10px] font-black transition ${billing === b ? 'bg-lime-100 text-lime-700' : 'text-neutral-400 hover:text-neutral-900'}`}>
               {b === 'monthly' ? 'Monthly' : b === 'halfyearly' ? 'Half-Yearly' : 'Annual'}
-              {b === 'annual' && <span className="absolute -top-2 -right-1 bg-emerald-500 text-white text-[7px] font-black px-1 py-0.5 rounded-full leading-none">SAVE</span>}
+              {b === 'annual' && <span className="absolute -top-2 -right-1 bg-lime-500 text-neutral-900 text-[7px] font-black px-1 py-0.5 rounded-full leading-none">SAVE</span>}
             </button>
           ))}
         </div>
@@ -112,10 +112,10 @@ export default function PricingPage() {
           const isPro = key === 'pro'
 
           return (
-            <div key={key} className={`relative rounded-2xl border p-4 flex flex-col gap-3 transition ${
-              isPremium ? 'border-amber-500/30 bg-gradient-to-b from-amber-500/10 to-transparent' :
-              isPro     ? 'border-cyan-500/30 bg-gradient-to-b from-cyan-500/10 to-transparent' :
-                          'border-white/10 bg-white/5'
+            <div key={key} className={`group relative rounded-2xl border-2 bg-white p-4 flex flex-col gap-3 transition-all duration-300 hover:-translate-y-1 shadow-sm ${
+              isPremium ? 'border-amber-300 hover:shadow-xl hover:shadow-amber-400/20' :
+              isPro     ? 'border-cyan-300 hover:shadow-xl hover:shadow-cyan-400/20' :
+                          'border-transparent hover:shadow-xl hover:shadow-black/5'
             }`}>
               {isPro && (
                 <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-cyan-500 text-white text-[10px] font-bold">
@@ -125,28 +125,28 @@ export default function PricingPage() {
 
               {/* Plan header */}
               <div className="flex items-center gap-2">
-                <div className={`w-8 h-8 rounded-xl flex items-center justify-center ${
-                  isPremium ? 'bg-amber-500/20' : isPro ? 'bg-cyan-500/20' : 'bg-slate-700'
+                <div className={`w-8 h-8 rounded-xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110 ${
+                  isPremium ? 'bg-amber-100' : isPro ? 'bg-cyan-100' : 'bg-neutral-100'
                 }`}>
                   <Icon className={`w-4 h-4 ${label.color}`} />
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-white">{label.name}</p>
+                  <p className="text-sm font-bold text-neutral-900">{label.name}</p>
                   {key === 'free' ? (
-                    <p className="text-xs font-semibold text-slate-400">₹0/mo</p>
+                    <p className="text-xs font-semibold text-neutral-400">₹0/mo</p>
                   ) : (
                     <div>
                       <p className={`text-xs font-semibold ${label.color}`}>
                         ₹{PRICING[key as 'pro'|'premium'][billing].toLocaleString()}
                       </p>
-                      <p className="text-[9px] text-slate-500">{MONTHLY_EQUIV[billing][key as 'pro'|'premium']} equiv</p>
+                      <p className="text-[9px] text-neutral-400">{MONTHLY_EQUIV[billing][key as 'pro'|'premium']} equiv</p>
                     </div>
                   )}
                 </div>
                 <div className="ml-auto flex flex-col items-end gap-1">
                   {isCurrent && <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${label.badge}`}>Active</span>}
                   {!isCurrent && SAVINGS[billing] && key !== 'free' && (
-                    <span className="text-[9px] bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded-full font-bold">
+                    <span className="text-[9px] bg-lime-100 text-lime-700 px-1.5 py-0.5 rounded-full font-bold">
                       {SAVINGS[billing]![key as 'pro'|'premium']}
                     </span>
                   )}
@@ -157,14 +157,14 @@ export default function PricingPage() {
               <div className="flex-1 space-y-1.5">
                 {features.map(f => (
                   <div key={f} className="flex items-center gap-1.5">
-                    <Check className="w-3 h-3 text-emerald-400 flex-shrink-0" />
-                    <span className="text-[11px] text-slate-300">{f}</span>
+                    <Check className="w-3 h-3 text-lime-600 flex-shrink-0" />
+                    <span className="text-[11px] text-neutral-600">{f}</span>
                   </div>
                 ))}
                 {locked.map(f => (
                   <div key={f} className="flex items-center gap-1.5 opacity-40">
-                    <X className="w-3 h-3 text-slate-500 flex-shrink-0" />
-                    <span className="text-[11px] text-slate-500 line-through">{f}</span>
+                    <X className="w-3 h-3 text-neutral-400 flex-shrink-0" />
+                    <span className="text-[11px] text-neutral-400 line-through">{f}</span>
                   </div>
                 ))}
               </div>
@@ -175,12 +175,12 @@ export default function PricingPage() {
                 disabled={isCurrent}
                 className={`w-full py-2 rounded-xl text-xs font-bold transition ${
                   isCurrent
-                    ? 'bg-slate-700 text-slate-400 cursor-default'
+                    ? 'bg-neutral-100 text-neutral-400 cursor-default'
                     : isPremium
                     ? 'bg-amber-500 text-white hover:bg-amber-400 shadow shadow-amber-500/30'
                     : isPro
                     ? 'bg-cyan-500 text-white hover:bg-cyan-400 shadow shadow-cyan-500/30'
-                    : 'bg-slate-700 text-white hover:bg-slate-600'
+                    : 'bg-neutral-900 text-neutral-50 hover:bg-neutral-800'
                 }`}>
                 {isCurrent ? '✓ Current Plan' : key === 'free' ? 'Downgrade to Free' : `Upgrade to ${label.name}`}
               </button>
@@ -190,14 +190,14 @@ export default function PricingPage() {
       </div>
 
       {/* Feature comparison table */}
-      <div className="rounded-2xl border border-white/10 bg-white/5 overflow-hidden">
-        <div className="px-3 py-2 border-b border-white/10 bg-slate-800/30">
-          <p className="text-xs font-semibold text-white">Feature Comparison</p>
+      <div className="rounded-2xl bg-white shadow-sm overflow-hidden">
+        <div className="px-3 py-2 border-b border-black/5 bg-neutral-50">
+          <p className="text-xs font-semibold text-neutral-900">Feature Comparison</p>
         </div>
         <table className="w-full text-xs">
-          <thead className="border-b border-white/10">
+          <thead className="border-b border-black/5">
             <tr>
-              <th className="px-3 py-2 text-left text-[10px] font-medium text-slate-400">Feature</th>
+              <th className="px-3 py-2 text-left text-[10px] font-medium text-neutral-400">Feature</th>
               {plans.map(p => (
                 <th key={p.key} className={`px-3 py-2 text-center text-[10px] font-bold ${PLAN_LABELS[p.key].color}`}>
                   {PLAN_LABELS[p.key].name}
@@ -205,7 +205,7 @@ export default function PricingPage() {
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/5">
+          <tbody className="divide-y divide-black/5">
             {[
               { label: 'Businesses', values: ['1', 'Up to 3', 'Unlimited'] },
               { label: 'Transactions', values: ['✓', '✓', '✓'] },
@@ -218,12 +218,12 @@ export default function PricingPage() {
               { label: 'AI Advisor', values: ['✗', '✗', '✓'] },
               { label: 'Calculator', values: ['✓', '✓', '✓'] },
             ].map(({ label, values }) => (
-              <tr key={label} className="hover:bg-white/5">
-                <td className="px-3 py-1.5 text-slate-300">{label}</td>
+              <tr key={label} className="hover:bg-neutral-50">
+                <td className="px-3 py-1.5 text-neutral-600">{label}</td>
                 {values.map((v, i) => (
                   <td key={i} className={`px-3 py-1.5 text-center font-medium ${
-                    v === '✓' || v === 'Full' || v === 'Unlimited' ? 'text-emerald-400' :
-                    v === '✗' ? 'text-slate-600' : 'text-slate-300'
+                    v === '✓' || v === 'Full' || v === 'Unlimited' ? 'text-lime-600' :
+                    v === '✗' ? 'text-neutral-300' : 'text-neutral-600'
                   }`}>{v}</td>
                 ))}
               </tr>

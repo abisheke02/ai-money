@@ -7,55 +7,37 @@
 @tailwind utilities;
 
 :root {
-  /* Dark Theme (Default) — Pure Black */
-  --background: 0 0% 3%;
-  --foreground: 0 0% 94%;
-  --card: 0 0% 5%;
-  --card-foreground: 0 0% 94%;
-  --popover: 0 0% 5%;
-  --popover-foreground: 0 0% 94%;
-  --primary: 161 74% 45%;
-  --primary-foreground: 0 0% 5%;
-  --secondary: 0 0% 10%;
-  --secondary-foreground: 0 0% 94%;
-  --muted: 0 0% 13%;
-  --muted-foreground: 0 0% 55%;
-  --accent: 0 0% 13%;
-  --accent-foreground: 0 0% 94%;
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 0 0% 94%;
-  --border: 0 0% 14%;
-  --input: 0 0% 14%;
-  --ring: 161 74% 45%;
+  /* Single theme: sage page background, black hero cards, white content cards, lime accent */
+  --background: 90 12% 92%;
+  --foreground: 0 0% 8%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 8%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 8%;
+  --primary: 82 84% 55%;
+  --primary-foreground: 0 0% 8%;
+  --secondary: 90 10% 88%;
+  --secondary-foreground: 0 0% 8%;
+  --muted: 90 8% 87%;
+  --muted-foreground: 0 0% 40%;
+  --accent: 82 84% 55%;
+  --accent-foreground: 0 0% 8%;
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 0 0% 8%;
+  --input: 0 0% 87%;
+  --ring: 82 84% 55%;
 
-  --debit: 0 84.2% 60.2%;
-  --credit: 142.1 70.6% 45.3%;
+  /* Hero/header card — the near-black card that sits on the sage background */
+  --hero: 0 0% 8%;
+  --hero-foreground: 0 0% 100%;
+  --hero-muted: 0 0% 65%;
+
+  --debit: 0 72% 51%;
+  --credit: 82 84% 45%;
   --warning: 38 92% 50%;
 
-  --radius: 1rem;
-}
-
-.light {
-  /* Light Theme — Pure White */
-  --background: 0 0% 100%;
-  --foreground: 0 0% 7%;
-  --card: 0 0% 97%;
-  --card-foreground: 0 0% 7%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 0 0% 7%;
-  --primary: 161 74% 38%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 0 0% 94%;
-  --secondary-foreground: 0 0% 15%;
-  --muted: 0 0% 93%;
-  --muted-foreground: 0 0% 45%;
-  --accent: 0 0% 93%;
-  --accent-foreground: 0 0% 15%;
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 0 0% 100%;
-  --border: 0 0% 87%;
-  --input: 0 0% 87%;
-  --ring: 161 74% 38%;
+  --radius: 1.5rem;
 }
 
 * {
@@ -82,58 +64,82 @@ body {
 }
 
 /* =====================================================
-   LIGHT MODE OVERRIDES — glassmorphism → solid light
+   GLOBAL LIGHT-SURFACE OVERRIDES
+   Single-theme now — every page that still uses the old dark-mode
+   utility classes (bg-slate-950, border-white/10, text-slate-400, ...)
+   renders coherently in the new light scheme via these overrides,
+   until it's hand-converted to the bespoke black-card/white-card style.
    ===================================================== */
 
 /* Root & layout backgrounds */
-.light .bg-slate-950        { background-color: #ffffff !important; }
-.light .bg-slate-950\/80    { background-color: rgba(255,255,255,0.92) !important; }
+.bg-slate-950        { background-color: #ffffff !important; }
+.bg-slate-950\/80    { background-color: rgba(255,255,255,0.92) !important; }
 
 /* Sidebar / card panel surfaces */
-.light .bg-white\/5         { background-color: rgba(0,0,0,0.03) !important; }
-.light .bg-white\/8         { background-color: rgba(0,0,0,0.05) !important; }
-.light .bg-white\/10        { background-color: rgba(0,0,0,0.06) !important; }
+.bg-white\/5         { background-color: rgba(0,0,0,0.03) !important; }
+.bg-white\/8         { background-color: rgba(0,0,0,0.05) !important; }
+.bg-white\/10        { background-color: rgba(0,0,0,0.06) !important; }
+.bg-white\/15        { background-color: rgba(0,0,0,0.08) !important; }
+.bg-white\/3         { background-color: rgba(0,0,0,0.02) !important; }
+.bg-white\/\[0\.02\] { background-color: rgba(0,0,0,0.02) !important; }
+.bg-white\/\[0\.03\] { background-color: rgba(0,0,0,0.03) !important; }
 
 /* Hover surfaces */
-.light .hover\:bg-white\/5:hover  { background-color: rgba(0,0,0,0.04) !important; }
-.light .hover\:bg-white\/8:hover  { background-color: rgba(0,0,0,0.05) !important; }
-.light .hover\:bg-white\/10:hover { background-color: rgba(0,0,0,0.06) !important; }
+.hover\:bg-white\/5:hover  { background-color: rgba(0,0,0,0.04) !important; }
+.hover\:bg-white\/8:hover  { background-color: rgba(0,0,0,0.05) !important; }
+.hover\:bg-white\/10:hover { background-color: rgba(0,0,0,0.06) !important; }
 
 /* Borders */
-.light .border-white\/5     { border-color: rgba(0,0,0,0.06) !important; }
-.light .border-white\/10    { border-color: rgba(0,0,0,0.1) !important; }
+.border-white\/5     { border-color: rgba(0,0,0,0.06) !important; }
+.border-white\/8     { border-color: rgba(0,0,0,0.08) !important; }
+.border-white\/10    { border-color: rgba(0,0,0,0.1) !important; }
+.border-white\/15    { border-color: rgba(0,0,0,0.12) !important; }
 
 /* Dividers */
-.light .divide-white\/5 > * + * { border-color: rgba(0,0,0,0.07) !important; }
+.divide-white\/5 > * + * { border-color: rgba(0,0,0,0.07) !important; }
 
 /* Text overrides */
-.light .text-white          { color: #111827 !important; }
-.light .text-slate-300      { color: #374151 !important; }
-.light .text-slate-400      { color: #6b7280 !important; }
-.light .text-slate-500      { color: #9ca3af !important; }
-.light .text-slate-600      { color: #d1d5db !important; }
-.light .text-slate-700      { color: #e5e7eb !important; }
+.text-white          { color: #111827 !important; }
+.text-slate-200      { color: #1f2937 !important; }
+.text-slate-300      { color: #374151 !important; }
+.text-slate-400      { color: #6b7280 !important; }
+.text-slate-500      { color: #9ca3af !important; }
+.text-slate-600      { color: #d1d5db !important; }
+.text-slate-700      { color: #e5e7eb !important; }
+.text-slate-950      { color: #030712 !important; }
 
 /* Input / form surfaces */
-.light .bg-slate-800        { background-color: #f3f4f6 !important; }
-.light .bg-slate-800\/50    { background-color: rgba(243,244,246,0.9) !important; }
-.light .bg-slate-800\/30    { background-color: rgba(243,244,246,0.6) !important; }
-.light .bg-slate-900        { background-color: #f9fafb !important; }
-.light .bg-slate-900\/50    { background-color: rgba(249,250,251,0.85) !important; }
-.light .bg-slate-900\/60    { background-color: rgba(249,250,251,0.9) !important; }
-.light .bg-slate-950\/60    { background-color: rgba(255,255,255,0.85) !important; }
+.bg-slate-500        { background-color: #e5e7eb !important; }
+.bg-slate-500\/10    { background-color: rgba(229,231,235,0.5) !important; }
+.bg-slate-500\/15    { background-color: rgba(229,231,235,0.6) !important; }
+.bg-slate-500\/20    { background-color: rgba(229,231,235,0.7) !important; }
+.bg-slate-600        { background-color: #e5e7eb !important; }
+.bg-slate-700        { background-color: #e5e7eb !important; }
+.bg-slate-800        { background-color: #f3f4f6 !important; }
+.bg-slate-800\/50    { background-color: rgba(243,244,246,0.9) !important; }
+.bg-slate-800\/30    { background-color: rgba(243,244,246,0.6) !important; }
+.bg-slate-800\/80    { background-color: rgba(243,244,246,0.95) !important; }
+.bg-slate-900        { background-color: #f9fafb !important; }
+.bg-slate-900\/50    { background-color: rgba(249,250,251,0.85) !important; }
+.bg-slate-900\/60    { background-color: rgba(249,250,251,0.9) !important; }
+.bg-slate-900\/70    { background-color: rgba(249,250,251,0.92) !important; }
+.bg-slate-950\/60    { background-color: rgba(255,255,255,0.85) !important; }
 
 /* Sidebar icon / accent backgrounds */
-.light .hover\:text-white:hover { color: #111827 !important; }
+.hover\:text-white:hover { color: #111827 !important; }
 
-/* Light mode: table column borders */
-.light .border-r.border-white\/10 { border-right-color: rgba(0,0,0,0.1) !important; }
-.light .border-b.border-white\/10 { border-bottom-color: rgba(0,0,0,0.1) !important; }
-.light .border.border-white\/10   { border-color: rgba(0,0,0,0.12) !important; }
-.light .border-2.border-emerald-500\/40 { border-color: rgba(16,185,129,0.5) !important; }
-.light .border-2.border-rose-500\/40    { border-color: rgba(239,68,68,0.4) !important; }
-.light .border-2.border-cyan-500\/40    { border-color: rgba(6,182,212,0.4) !important; }
-.light .bg-white\/5  { background-color: rgba(0,0,0,0.03) !important; }
+/* Table column borders */
+.border-r.border-white\/10 { border-right-color: rgba(0,0,0,0.1) !important; }
+.border-b.border-white\/10 { border-bottom-color: rgba(0,0,0,0.1) !important; }
+.border.border-white\/10   { border-color: rgba(0,0,0,0.12) !important; }
+.border-2.border-emerald-500\/40 { border-color: rgba(16,185,129,0.5) !important; }
+.border-2.border-rose-500\/40    { border-color: rgba(239,68,68,0.4) !important; }
+.border-2.border-cyan-500\/40    { border-color: rgba(6,182,212,0.4) !important; }
+
+/* NOTE: hand-converted ("bespoke") pages should use the neutral/zinc color
+   families for intentional dark cards (bg-neutral-900, text-neutral-50, etc)
+   instead of slate-950 / text-white / bg-white-5, since those are forced
+   light by the rules above for the not-yet-converted legacy pages. */
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
@@ -192,6 +198,86 @@ input[type="number"] {
   .stagger-2 { animation-delay: 0.2s; }
   .stagger-3 { animation-delay: 0.3s; }
   .stagger-4 { animation-delay: 0.4s; }
+
+  @keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  .animate-gradient-text {
+    background-size: 250% auto;
+    animation: gradientShift 6s ease infinite;
+  }
+
+  /* Animated underline that draws in from the left on hover (nav links) */
+  .hover-underline { position: relative; }
+  .hover-underline::after {
+    content: ''; position: absolute; left: 0; bottom: -2px; height: 2px; width: 0;
+    background: linear-gradient(90deg, #34d399, #22d3ee); transition: width .3s ease;
+  }
+  .hover-underline:hover::after { width: 100%; }
+
+  /* Underline that draws in automatically on mount (not hover) */
+  @keyframes underlineDraw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  .wow-underline { position: relative; display: inline-block; }
+  .wow-underline::after {
+    content: ''; position: absolute; left: 0; bottom: -6px; height: 3px; width: 100%;
+    background: linear-gradient(90deg, #34d399, #22d3ee); border-radius: 3px;
+    transform: scaleX(0); transform-origin: left;
+    animation: underlineDraw .8s .3s cubic-bezier(.22,1,.36,1) forwards;
+  }
+
+  /* Diagonal light sweep across a card on hover */
+  @keyframes shineSweep {
+    0% { transform: translateX(-120%) skewX(-20deg); }
+    100% { transform: translateX(220%) skewX(-20deg); }
+  }
+  .card-shine { position: relative; overflow: hidden; }
+  .card-shine::before {
+    content: ''; position: absolute; top: 0; left: 0; width: 60%; height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,0.12), transparent);
+    transform: translateX(-120%) skewX(-20deg); pointer-events: none;
+  }
+  .card-shine:hover::before { animation: shineSweep .9s ease; }
+
+  /* Rotating conic-gradient border ring */
+  @property --border-angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+  @keyframes spinBorder { to { --border-angle: 360deg; } }
+  .conic-border { position: relative; z-index: 0; }
+  .conic-border::before {
+    content: ''; position: absolute; inset: -2px; z-index: -1; border-radius: inherit;
+    background: conic-gradient(from var(--border-angle), #34d399, #22d3ee, #34d399);
+    animation: spinBorder 4s linear infinite;
+  }
+
+  /* Subtle static 3D tilt on hover */
+  .card-3d { transition: transform .3s cubic-bezier(.22,1,.36,1); transform-style: preserve-3d; }
+  .card-3d:hover { transform: perspective(900px) rotateX(4deg) rotateY(-4deg) translateY(-4px); }
+
+  /* Click ripple */
+  @keyframes rippleOut {
+    0% { opacity: .5; transform: scale(1); }
+    100% { opacity: 0; transform: scale(30); }
+  }
+  .ripple { position: relative; overflow: hidden; }
+  .ripple::after {
+    content: ''; position: absolute; inset: 0; margin: auto; width: 8px; height: 8px;
+    border-radius: 9999px; background: rgba(255,255,255,0.5); opacity: 0;
+  }
+  .ripple:active::after { animation: rippleOut .5s ease-out; }
+
+  /* Ambient moving-gradient background wash */
+  @keyframes meshShift {
+    0%   { background-position: 0% 50%;   filter: hue-rotate(0deg); }
+    25%  { background-position: 100% 25%; filter: hue-rotate(8deg); }
+    50%  { background-position: 75% 95%;  filter: hue-rotate(-5deg); }
+    75%  { background-position: 25% 70%;  filter: hue-rotate(5deg); }
+    100% { background-position: 0% 50%;   filter: hue-rotate(0deg); }
+  }
+  .animate-mesh { background-size: 230% 230%; animation: meshShift 10s ease-in-out infinite; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card-shine::before, .conic-border::before, .animate-mesh, .wow-underline::after { animation: none !important; }
+  }
 
   .gradient-primary {
     background: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--secondary)) 100%);

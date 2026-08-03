@@ -20,7 +20,6 @@ import {
 import { BusinessProvider, useBusiness } from '@/lib/contexts/BusinessContext'
 import { CurrencyProvider } from '@/lib/contexts/CurrencyContext'
 import { PlanProvider, usePlan, PLAN_LABELS } from '@/lib/contexts/PlanContext'
-import { ThemeToggle } from '@/app/components/ThemeToggle'
 import { BusinessSwitcher } from '@/app/components/BusinessSwitcher'
 import { ErrorBoundary } from '@/app/components/ErrorBoundary'
 
@@ -64,17 +63,17 @@ function SidebarContent({ onClose }: { onClose: () => void }) {
               key={item.href}
               href={isLocked ? '/dashboard/pricing' : item.href}
               onClick={onClose}
-              className={`flex items-center gap-2 w-full rounded-xl px-3 py-2 text-xs font-medium transition-all ${
+              className={`flex items-center gap-2 w-full rounded-xl px-3 py-2 text-xs font-semibold transition-all ${
                 isActive
-                  ? 'bg-gradient-to-r from-emerald-500/25 to-cyan-500/25 text-white shadow'
+                  ? 'bg-neutral-900 text-neutral-50 shadow'
                   : isLocked
-                  ? 'text-slate-600 hover:text-slate-400'
-                  : 'text-slate-400 hover:bg-white/8 hover:text-white'
+                  ? 'text-neutral-300 hover:text-neutral-400'
+                  : 'text-neutral-500 hover:bg-black/5 hover:text-neutral-900'
               }`}
             >
               <item.icon className="w-3.5 h-3.5 flex-shrink-0" />
-              <span className={isLocked ? 'line-through decoration-slate-600' : ''}>{item.label}</span>
-              {isLocked && <Lock className="w-2.5 h-2.5 ml-auto text-slate-600" />}
+              <span className={isLocked ? 'line-through decoration-neutral-300' : ''}>{item.label}</span>
+              {isLocked && <Lock className="w-2.5 h-2.5 ml-auto text-neutral-300" />}
             </Link>
           )
         })}
@@ -281,27 +280,27 @@ function LayoutInner({ children }: { children: React.ReactNode }) {
 
           {/* Sidebar — website only, hidden in native app */}
           {!isNativeApp && (
-            <aside className={`fixed lg:static inset-y-0 left-0 z-50 w-52 h-screen flex flex-col border-r border-white/10 bg-background backdrop-blur-xl transform transition-all duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full lg:translate-x-0'}`}>
-              <div className="flex-shrink-0 px-3 py-3 flex items-center justify-between border-b border-white/5">
+            <aside className={`fixed lg:static inset-y-0 left-0 z-50 w-52 h-screen flex flex-col border-r border-black/10 bg-white transform transition-all duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full lg:translate-x-0'}`}>
+              <div className="flex-shrink-0 px-3 py-3 flex items-center justify-between border-b border-black/5">
                 <Link href="/dashboard" className="flex items-center gap-2 group">
                   <img src="/logos/moneylix-app-icon-dark.svg" alt="Moneylix" className="h-8 w-8 flex-shrink-0 group-hover:scale-105 transition-transform drop-shadow-md" />
                   <div>
-                    <h1 className="text-sm font-bold leading-tight">Moneylix</h1>
-                    <p className="text-[10px] text-slate-400 leading-tight">Finance Dashboard</p>
+                    <h1 className="text-sm font-bold leading-tight text-neutral-900">Moneylix</h1>
+                    <p className="text-[10px] text-neutral-400 leading-tight">Finance Dashboard</p>
                   </div>
                 </Link>
-                <button onClick={() => setSidebarOpen(false)} className="lg:hidden p-1 text-slate-400 hover:text-white"><X className="w-4 h-4" /></button>
+                <button onClick={() => setSidebarOpen(false)} className="lg:hidden p-1 text-neutral-400 hover:text-neutral-900"><X className="w-4 h-4" /></button>
               </div>
               <div className="flex-1 flex flex-col overflow-y-auto sidebar-scroll py-2">
                 <div className="px-2 pb-2">
-                  <div className="rounded-xl border border-white/10 bg-slate-900/50 p-1">
+                  <div className="rounded-xl border border-black/10 bg-black/[0.03] p-1">
                     <BusinessSwitcher compact />
                   </div>
                 </div>
                 <SidebarContent onClose={() => setSidebarOpen(false)} />
               </div>
-              <div className="flex-shrink-0 px-2 py-2 border-t border-white/5">
-                <button onClick={handleLogout} className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-all w-full">
+              <div className="flex-shrink-0 px-2 py-2 border-t border-black/5">
+                <button onClick={handleLogout} className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium text-neutral-500 hover:text-rose-500 hover:bg-rose-500/10 transition-all w-full">
                   <LogOut className="w-3.5 h-3.5" /><span>Logout</span>
                 </button>
               </div>
@@ -344,23 +343,20 @@ function LayoutInner({ children }: { children: React.ReactNode }) {
                     <LayoutDashboard className="w-5 h-5" />
                   </button>
                   <div className="hidden lg:flex flex-col">
-                    <p className="text-[10px] text-emerald-400 font-black uppercase tracking-[0.2em]">Live Session</p>
-                    <p className="text-lg font-black text-white tracking-tight">Financial Command Center</p>
+                    <p className="text-[10px] text-lime-600 font-black uppercase tracking-[0.2em]">Live Session</p>
+                    <p className="text-lg font-black text-neutral-900 tracking-tight">Financial Command Center</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
                   <ReceivableBadge />
-                  <ThemeToggle />
                   <NotificationBell />
-                  <div className="flex items-center gap-3 pl-2 border-l border-white/10">
-                    <div className="h-11 w-11 rounded-2xl bg-gradient-to-br from-emerald-400 to-cyan-500 p-[2px] shadow-lg shadow-emerald-500/20">
-                      <div className="h-full w-full rounded-[14px] bg-slate-950 flex items-center justify-center font-black text-xs text-white">
-                        {username ? username.slice(0, 2).toUpperCase() : '??'}
-                      </div>
+                  <div className="flex items-center gap-3 pl-2 border-l border-black/10">
+                    <div className="h-11 w-11 rounded-2xl bg-neutral-900 flex items-center justify-center font-black text-xs text-neutral-50 shadow-lg">
+                      {username ? username.slice(0, 2).toUpperCase() : '??'}
                     </div>
                     <div className="hidden xl:block">
-                      <p className="text-xs font-black text-white capitalize">{username || 'Loading...'}</p>
-                      <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Moneylix Account</p>
+                      <p className="text-xs font-black text-neutral-900 capitalize">{username || 'Loading...'}</p>
+                      <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">Moneylix Account</p>
                     </div>
                   </div>
                 </div>
