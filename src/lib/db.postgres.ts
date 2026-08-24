@@ -203,6 +203,21 @@ async function patchLegacyColumns(client: PoolClient): Promise<void> {
 
   await seedAdminUser(client)
   await seedDemoUser(client)
+  await backfillBusinessOwnership(client)
+}
+
+// Migration 008 assigns pre-existing businesses to the admin user (id=1),
+// but on a fresh install that account doesn't exist until seedAdminUser()
+// runs above, so migration 008 can't have assigned it there. Catch up here.
+async function backfillBusinessOwnership(client: PoolClient): Promise<void> {
+  try {
+    const result = await client.query<{ id: number }>(
+      "SELECT id FROM users WHERE role = 'admin' ORDER BY id LIMIT 1"
+    )
+    const admin = result.rows[0]
+    if (!admin) return
+    await client.query('UPDATE businesses SET user_id = $1 WHERE user_id IS NULL', [admin.id])
+  } catch { /* businesses.user_id may not exist on older schemas */ }
 }
 
 // ---------------------------------------------------------------------------

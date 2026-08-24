@@ -86,6 +86,18 @@ function patchLegacyColumns(db: Database.Database): void {
 
   seedAdminUser(db)
   seedDemoUser(db)
+  backfillBusinessOwnership(db)
+}
+
+// Migration 008 assigns pre-existing businesses to the admin user (id=1),
+// but on a fresh install that account doesn't exist until seedAdminUser()
+// runs above, so migration 008 can't have assigned it there. Catch up here.
+function backfillBusinessOwnership(db: Database.Database): void {
+  try {
+    const admin = db.prepare("SELECT id FROM users WHERE role = 'admin' ORDER BY id LIMIT 1").get() as { id: number } | undefined
+    if (!admin) return
+    db.prepare('UPDATE businesses SET user_id = ? WHERE user_id IS NULL').run(admin.id)
+  } catch { /* businesses.user_id may not exist on older schemas */ }
 }
 
 function seedAdminUser(db: Database.Database): void {
