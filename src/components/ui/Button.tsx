@@ -36,6 +36,7 @@ export default function Button({
     <button
       className={cn(
         'rounded-xl font-bold transition-all duration-300 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2',
+        'outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
         variants[variant],
         sizes[size],
         className
