@@ -1,6 +1,9 @@
 import Database from 'better-sqlite3'
 import path from 'path'
 import fs from 'fs'
+import bcrypt from 'bcryptjs'
+
+const DEFAULT_ADMIN_PASSWORD = 'Moneylix@Admin2026'
 
 let dbInstance: Database.Database | null = null
 
@@ -86,24 +89,53 @@ function patchLegacyColumns(db: Database.Database): void {
 
   seedAdminUser(db)
   seedDemoUser(db)
+  backfillBusinessOwnership(db)
+}
+
+// Migration 008 assigns pre-existing businesses to the admin user (id=1),
+// but on a fresh install that account doesn't exist until seedAdminUser()
+// runs above, so migration 008 can't have assigned it there. Catch up here.
+function backfillBusinessOwnership(db: Database.Database): void {
+  try {
+    const admin = db.prepare("SELECT id FROM users WHERE role = 'admin' ORDER BY id LIMIT 1").get() as { id: number } | undefined
+    if (!admin) return
+    db.prepare('UPDATE businesses SET user_id = ? WHERE user_id IS NULL').run(admin.id)
+  } catch { /* businesses.user_id may not exist on older schemas */ }
 }
 
 function seedAdminUser(db: Database.Database): void {
   try {
     const existing = db.prepare("SELECT id FROM users WHERE role = 'admin'").get()
     if (existing) return
-    // bcrypt hash of 'Moneylix@Admin2026' — change immediately via /admin settings
-    const hash = '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewFRpOy1R7X3s1im'
+
+    const isProd = process.env.NODE_ENV === 'production'
+    const password = isProd ? process.env.ADMIN_SEED_PASSWORD : DEFAULT_ADMIN_PASSWORD
+    if (isProd && !password) {
+      console.warn(
+        "[db] No admin account exists. Skipping auto-seed in production — set ADMIN_SEED_PASSWORD " +
+        "to bootstrap one, or register a user and set role='admin' manually."
+      )
+      return
+    }
+
+    // Hashed at runtime (not a hardcoded hash) so it always matches the password actually being set.
+    const hash = bcrypt.hashSync(password!, 12)
     db.prepare(
       "INSERT OR IGNORE INTO users (username, email, password, role) VALUES ('admin', 'admin@moneylix.app', ?, 'admin')"
     ).run(hash)
-    console.log('[db] Admin seeded — login: admin / Moneylix@Admin2026 — CHANGE THIS NOW')
+    console.log(
+      isProd
+        ? '[db] Admin seeded from ADMIN_SEED_PASSWORD — rotate it via /admin settings once logged in.'
+        : `[db] Admin seeded — login: admin / ${DEFAULT_ADMIN_PASSWORD} — CHANGE THIS NOW (dev only)`
+    )
   } catch (err) {
     console.error('[db] Failed to seed admin user:', err)
   }
 }
 
 function seedDemoUser(db: Database.Database): void {
+  // Never auto-create a well-known demo/demo account in production.
+  if (process.env.NODE_ENV === 'production') return
   try {
     const existing = db.prepare("SELECT id FROM users WHERE username = 'demo'").get()
     if (existing) return

@@ -6,6 +6,7 @@ import { Download, Upload, Info, Tags, ClipboardList, Calculator, CreditCard, He
 import { CurrencySelector } from '@/app/components/CurrencySelector'
 import { BankSyncCard } from '@/app/components/BankSyncCard'
 import { useBusiness } from '@/lib/contexts/BusinessContext'
+import { apiFetch } from '@/services/apiClient'
 import { useRouter } from 'next/navigation'
 
 const quickLinks = [
@@ -73,7 +74,7 @@ export default function SettingsPage() {
   const handleExport = async (format: 'csv' | 'json') => {
     const params = new URLSearchParams()
     if (activeBusiness) params.set('businessId', activeBusiness.id.toString())
-    const res = await fetch(`/api/export?format=${format}&${params}`)
+    const res = await apiFetch(`/api/export?format=${format}&${params}`)
     const blob = format === 'json' ? new Blob([JSON.stringify(await res.json(), null, 2)], { type: 'application/json' }) : await res.blob()
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a'); a.href = url; a.download = `moneylix_${activeBusiness?.name || 'export'}.${format}`; a.click(); URL.revokeObjectURL(url)

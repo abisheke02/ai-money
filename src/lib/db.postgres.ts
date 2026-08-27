@@ -17,7 +17,10 @@
  */
 
 import { Pool, PoolClient, QueryResult, QueryResultRow } from 'pg'
+import bcrypt from 'bcryptjs'
 import path from 'path'
+
+const DEFAULT_ADMIN_PASSWORD = 'Moneylix@Admin2026'
 import fs from 'fs'
 
 // ---------------------------------------------------------------------------
@@ -203,6 +206,21 @@ async function patchLegacyColumns(client: PoolClient): Promise<void> {
 
   await seedAdminUser(client)
   await seedDemoUser(client)
+  await backfillBusinessOwnership(client)
+}
+
+// Migration 008 assigns pre-existing businesses to the admin user (id=1),
+// but on a fresh install that account doesn't exist until seedAdminUser()
+// runs above, so migration 008 can't have assigned it there. Catch up here.
+async function backfillBusinessOwnership(client: PoolClient): Promise<void> {
+  try {
+    const result = await client.query<{ id: number }>(
+      "SELECT id FROM users WHERE role = 'admin' ORDER BY id LIMIT 1"
+    )
+    const admin = result.rows[0]
+    if (!admin) return
+    await client.query('UPDATE businesses SET user_id = $1 WHERE user_id IS NULL', [admin.id])
+  } catch { /* businesses.user_id may not exist on older schemas */ }
 }
 
 // ---------------------------------------------------------------------------
@@ -216,27 +234,43 @@ async function seedAdminUser(client: PoolClient): Promise<void> {
     const existing = await client.query("SELECT id FROM users WHERE role = 'admin' LIMIT 1")
     if (existing.rows.length > 0) return
 
-    // bcrypt hash of 'Moneylix@Admin2026' — change immediately via /admin settings
-    const hash = '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewFRpOy1R7X3s1im'
+    const isProd = process.env.NODE_ENV === 'production'
+    const password = isProd ? process.env.ADMIN_SEED_PASSWORD : DEFAULT_ADMIN_PASSWORD
+    if (isProd && !password) {
+      console.warn(
+        "[db.postgres] No admin account exists. Skipping auto-seed in production — set ADMIN_SEED_PASSWORD " +
+        "to bootstrap one, or register a user and set role='admin' manually."
+      )
+      return
+    }
+
+    // Hashed at runtime (not a hardcoded hash) so it always matches the password actually being set.
+    const hash = bcrypt.hashSync(password!, 12)
     await client.query(
       `INSERT INTO users (username, email, password, role)
        VALUES ('admin', 'admin@moneylix.app', $1, 'admin')
        ON CONFLICT DO NOTHING`,
       [hash]
     )
-    console.log('[db.postgres] Admin seeded — login: admin / Moneylix@Admin2026 — CHANGE THIS NOW')
+    console.log(
+      isProd
+        ? '[db.postgres] Admin seeded from ADMIN_SEED_PASSWORD — rotate it via /admin settings once logged in.'
+        : `[db.postgres] Admin seeded — login: admin / ${DEFAULT_ADMIN_PASSWORD} — CHANGE THIS NOW (dev only)`
+    )
   } catch (err) {
     console.error('[db.postgres] Failed to seed admin user:', err)
   }
 }
 
 async function seedDemoUser(client: PoolClient): Promise<void> {
+  // Never auto-create a well-known demo/demo account in production.
+  if (process.env.NODE_ENV === 'production') return
   try {
     const existing = await client.query("SELECT id FROM users WHERE username = 'demo' LIMIT 1")
     if (existing.rows.length > 0) return
 
-    // bcrypt hash of 'demo'
-    const hash = '$2b$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy'
+    // Hashed at runtime so it actually matches 'demo' (the previous hardcoded hash didn't).
+    const hash = bcrypt.hashSync('demo', 10)
     await client.query(
       `INSERT INTO users (username, email, password, role)
        VALUES ('demo', 'demo@moneylix.app', $1, 'user')

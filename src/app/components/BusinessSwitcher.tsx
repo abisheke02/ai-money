@@ -5,7 +5,7 @@ import { Plus, ChevronDown, Check, Pencil, Trash2, X } from 'lucide-react'
 import { useBusiness } from '@/lib/contexts/BusinessContext'
 
 export function BusinessSwitcher({ compact = false }: { compact?: boolean }) {
-  const { activeBusiness, businesses, setActiveBusinessId, refreshBusinesses } = useBusiness()
+  const { activeBusiness, businesses, setActiveBusinessId, refreshBusinesses, loading } = useBusiness()
   const [open, setOpen] = useState(false)
   const [adding, setAdding] = useState(false)
   const [newName, setNewName] = useState('')
@@ -108,10 +108,10 @@ export function BusinessSwitcher({ compact = false }: { compact?: boolean }) {
         >
           <div className="flex items-center gap-2.5 min-w-0">
             <div className={`rounded-lg bg-gradient-to-br from-emerald-400/30 to-cyan-400/20 flex items-center justify-center text-emerald-300 font-bold flex-shrink-0 ${compact ? 'w-7 h-7 text-sm' : 'w-7 h-7 text-sm'}`}>
-              {activeBusiness?.name?.[0]?.toUpperCase() || 'B'}
+              {activeBusiness?.name?.[0]?.toUpperCase() || (loading ? 'B' : '+')}
             </div>
             <span className="text-white text-sm font-medium truncate">
-              {activeBusiness?.name || 'Loading...'}
+              {activeBusiness?.name || (loading ? 'Loading…' : 'Add a business')}
             </span>
           </div>
           <ChevronDown className={`w-4 h-4 text-slate-400 flex-shrink-0 transition-transform ${open ? 'rotate-180' : ''}`} />

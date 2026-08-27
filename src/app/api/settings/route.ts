@@ -1,16 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import dbQuery from '@/lib/db.async'
 import { settingsSchema } from '@/lib/schemas'
-
-async function getUserId(request: NextRequest): Promise<number | null> {
-  const token = (request.headers.get('authorization') ?? '').replace('Bearer ', '')
-  if (!token) return null
-  const session = await dbQuery.get<{ user_id: number }>(
-    "SELECT user_id FROM sessions WHERE token = ? AND expires_at > datetime('now')",
-    [token]
-  )
-  return session?.user_id ?? null
-}
+import { getUserId } from '@/lib/auth/apiAuth'
 
 export async function GET(request: NextRequest) {
   try {

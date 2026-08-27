@@ -39,7 +39,7 @@ export default function DashboardPage() {
   const { currentCurrency, currencies, loading: currencyLoading } = useCurrency()
 
   const fetchData = useCallback(async () => {
-    if (!activeBusiness) return
+    if (!activeBusiness) { setLoading(false); return }
     setLoading(true)
     try {
       const bId = activeBusiness.id
