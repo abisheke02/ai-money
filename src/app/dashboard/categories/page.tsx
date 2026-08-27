@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom'
 import { Plus, Edit2, Trash2, X, Tag, CreditCard, Car, Home, Zap, Film, Heart, BookOpen, User, Package, Laptop, Gift, Briefcase, TrendingUp, RotateCcw, Lock } from 'lucide-react'
 import type { Category } from '@/types'
 import { usePlan } from '@/lib/contexts/PlanContext'
+import { apiJson } from '@/services/apiClient'
 import Link from 'next/link'
 
 const iconComponents: Record<string, any> = {
@@ -28,7 +29,9 @@ export default function CategoriesPage() {
   useEffect(() => { setIsMounted(true) }, [])
 
   const fetchCategories = useCallback(async () => {
-    try { const res = await fetch('/api/categories'); setCategories(await res.json()) } catch (e) { console.error(e) } finally { setLoading(false) }
+    const { data } = await apiJson<Category[]>('/api/categories')
+    if (data) setCategories(data)
+    setLoading(false)
   }, [])
 
   useEffect(() => { fetchCategories() }, [fetchCategories])
@@ -39,17 +42,15 @@ export default function CategoriesPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const url = editingCategory ? `/api/categories/${editingCategory.id}` : '/api/categories'
-    const token = localStorage.getItem('moneylix_session_token') ?? ''
-    const res = await fetch(url, { method: editingCategory ? 'PUT' : 'POST', headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) }, body: JSON.stringify(form) })
-    if (res.ok) { showT(editingCategory ? 'Updated' : 'Created'); setShowModal(false); setEditingCategory(null); resetForm(); fetchCategories() }
+    const { ok } = await apiJson(url, { method: editingCategory ? 'PUT' : 'POST', body: JSON.stringify(form) })
+    if (ok) { showT(editingCategory ? 'Updated' : 'Created'); setShowModal(false); setEditingCategory(null); resetForm(); fetchCategories() }
   }
 
   const handleEdit = (cat: Category) => { setForm({ name: cat.name, icon: cat.icon, color: cat.color, type: cat.type }); setEditingCategory(cat); setShowModal(true) }
   const handleDelete = async (cat: Category) => {
     if (!confirm(`Delete "${cat.name}"?`)) return
-    const token = localStorage.getItem('moneylix_session_token') ?? ''
-    const res = await fetch(`/api/categories/${cat.id}`, { method: 'DELETE', headers: token ? { Authorization: `Bearer ${token}` } : {} })
-    if (res.ok) { showT('Deleted'); fetchCategories() } else { const d = await res.json(); showT(d.error || 'Cannot delete') }
+    const { ok, error } = await apiJson(`/api/categories/${cat.id}`, { method: 'DELETE' })
+    if (ok) { showT('Deleted'); fetchCategories() } else { showT(error || 'Cannot delete') }
   }
 
   const debitCats = categories.filter(c => c.type === 'debit' || c.type === 'both')

@@ -8,6 +8,7 @@ import type { Transaction, Category } from '@/types'
 import { useBusiness } from '@/lib/contexts/BusinessContext'
 import { useCurrency } from '@/lib/contexts/CurrencyContext'
 import { Scanner } from '@/app/components/Scanner'
+import { apiJson, apiFetch } from '@/services/apiClient'
 import Button from '@/components/ui/Button'
 import Modal from '@/components/ui/Modal'
 import Input from '@/components/ui/Input'
@@ -57,11 +58,11 @@ export default function TransactionsPage() {
       if (activeBusiness) params.set('businessId', activeBusiness.id.toString())
       params.set('page', filters.page.toString())
       params.set('limit', filters.limit.toString())
-      const token = localStorage.getItem('moneylix_session_token') ?? ''
-      const authH: Record<string,string> = token ? { Authorization: `Bearer ${token}` } : {}
-      const [txRes, catRes] = await Promise.all([fetch(`/api/transactions?${params}`, { headers: authH }), fetch('/api/categories')])
-      const txData = await txRes.json(); const catData = await catRes.json()
-      setTransactions(txData.transactions || []); setTotal(txData.total || 0); setCategories(catData || [])
+      const [txResult, catResult] = await Promise.all([
+        apiJson<{ transactions: Transaction[]; total: number }>(`/api/transactions?${params}`),
+        apiJson<Category[]>('/api/categories'),
+      ])
+      setTransactions(txResult.data?.transactions || []); setTotal(txResult.data?.total || 0); setCategories(catResult.data || [])
     } catch (e) { console.error(e) } finally { setLoading(false) }
   }, [filters, activeBusiness])
 
@@ -95,21 +96,15 @@ export default function TransactionsPage() {
         reminder_days: parseInt(form.reminder_days) || 3,
         due_date: form.due_date || null
       }
-      const token = localStorage.getItem('moneylix_session_token') ?? ''
-      const res = await fetch(url, {
-        method: editingId ? 'PUT' : 'POST',
-        headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
-        body: JSON.stringify(payload)
-      })
-      if (res.ok) { 
-        setShowModal(false); 
-        setEditingId(null); 
-        resetForm(); 
-        fetchData(); 
-        showToast(editingId ? 'Updated' : 'Added', 'success') 
+      const { ok, error } = await apiJson(url, { method: editingId ? 'PUT' : 'POST', body: JSON.stringify(payload) })
+      if (ok) {
+        setShowModal(false);
+        setEditingId(null);
+        resetForm();
+        fetchData();
+        showToast(editingId ? 'Updated' : 'Added', 'success')
       } else {
-        const errData = await res.json()
-        showToast(errData.error || 'Failed to save', 'error')
+        showToast(error || 'Failed to save', 'error')
       }
     } catch (err) {
       console.error(err)
@@ -120,19 +115,16 @@ export default function TransactionsPage() {
   }
 
   const handleEdit = (tx: Transaction) => { setForm({ type: tx.type, status: (tx as any).status || 'completed', amount: tx.amount.toString(), category_id: tx.category_id.toString(), date: tx.date, due_date: tx.due_date || '', reminder_days: (tx.reminder_days || 3).toString(), note: tx.note || '', method: tx.method || 'cash', tags: tx.tags || '' }); setEditingId(tx.id); setShowModal(true) }
-  const getToken = () => localStorage.getItem('moneylix_session_token') ?? ''
-  const handleDelete = async (tx: Transaction) => { const t = getToken(); setDeletedTransaction(tx); await fetch(`/api/transactions/${tx.id}`, { method: 'DELETE', headers: t ? { Authorization: `Bearer ${t}` } : {} }); showToast('Deleted', 'undo'); fetchData() }
-  const handleUndoDelete = async () => { if (!deletedTransaction) return; const t = getToken(); await fetch('/api/transactions', { method: 'POST', headers: { 'Content-Type': 'application/json', ...(t ? { Authorization: `Bearer ${t}` } : {}) }, body: JSON.stringify({ ...deletedTransaction, business_id: activeBusiness?.id, currency: deletedTransaction.currency || currentCurrency }) }); fetchData(); setDeletedTransaction(null); showToast('Restored', 'success'); setTimeout(() => setToast(null), 3000) }
-  const handleBulkDelete = async () => { const t = getToken(); for (const id of selectedIds) await fetch(`/api/transactions/${id}`, { method: 'DELETE', headers: t ? { Authorization: `Bearer ${t}` } : {} }); showToast(`${selectedIds.length} deleted`, 'success'); setSelectedIds([]); fetchData() }
+  const handleDelete = async (tx: Transaction) => { setDeletedTransaction(tx); await apiJson(`/api/transactions/${tx.id}`, { method: 'DELETE' }); showToast('Deleted', 'undo'); fetchData() }
+  const handleUndoDelete = async () => { if (!deletedTransaction) return; await apiJson('/api/transactions', { method: 'POST', body: JSON.stringify({ ...deletedTransaction, business_id: activeBusiness?.id, currency: deletedTransaction.currency || currentCurrency }) }); fetchData(); setDeletedTransaction(null); showToast('Restored', 'success'); setTimeout(() => setToast(null), 3000) }
+  const handleBulkDelete = async () => { for (const id of selectedIds) await apiJson(`/api/transactions/${id}`, { method: 'DELETE' }); showToast(`${selectedIds.length} deleted`, 'success'); setSelectedIds([]); fetchData() }
   const handleBulkCategoryChange = async () => {
     if (!bulkCategoryId) return
-    const t = getToken()
-    const res = await fetch('/api/transactions/bulk', {
+    const { ok } = await apiJson('/api/transactions/bulk', {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json', ...(t ? { Authorization: `Bearer ${t}` } : {}) },
       body: JSON.stringify({ ids: selectedIds, updates: { category_id: parseInt(bulkCategoryId) } })
     })
-    if (res.ok) {
+    if (ok) {
       showToast(`${selectedIds.length} updated`, 'success')
       setSelectedIds([])
       setShowBulkCategoryModal(false)
@@ -152,7 +144,7 @@ export default function TransactionsPage() {
     showToast('Scan successful!', 'success')
   }
 
-  const handleExport = async () => { const params = new URLSearchParams(); if (activeBusiness) params.set('businessId', activeBusiness.id.toString()); const res = await fetch(`/api/export?format=csv&${params}`); const blob = await res.blob(); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'transactions.csv'; a.click(); URL.revokeObjectURL(url) }
+  const handleExport = async () => { const params = new URLSearchParams(); if (activeBusiness) params.set('businessId', activeBusiness.id.toString()); const res = await apiFetch(`/api/export?format=csv&${params}`); const blob = await res.blob(); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'transactions.csv'; a.click(); URL.revokeObjectURL(url) }
   const toggleSelect = (id: number) => setSelectedIds(p => p.includes(id) ? p.filter(i => i !== id) : [...p, id])
   const toggleSelectAll = () => setSelectedIds(selectedIds.length === transactions.length ? [] : transactions.map(t => t.id))
 

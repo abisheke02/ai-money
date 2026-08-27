@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import db from '@/lib/db.async'
+import { getUserId, userOwnsBusinessId } from '@/lib/auth/apiAuth'
 
 export async function GET(request: Request) {
   try {
@@ -9,6 +10,14 @@ export async function GET(request: Request) {
 
     if (!businessId) {
       return NextResponse.json({ error: 'Business ID is required' }, { status: 400 })
+    }
+
+    const userId = await getUserId(request)
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+    if (!await userOwnsBusinessId(userId, parseInt(businessId, 10))) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
     const transactions = await db.all('SELECT * FROM transactions WHERE business_id = ? ORDER BY date DESC, created_at DESC', [businessId]) as any[]

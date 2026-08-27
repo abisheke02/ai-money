@@ -2,21 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import db from '@/lib/db.async'
 import { parseQuery, TransactionFiltersSchema, parseBody, CreateTransactionSchema } from '@/lib/schemas'
 import type { PaginatedTransactions } from '@/types'
-
-async function getUserId(request: NextRequest): Promise<number | null> {
-  const token = (request.headers.get('authorization') ?? '').replace('Bearer ', '')
-  if (!token) return null
-  const session = await db.get<{ user_id: number }>(
-    "SELECT user_id FROM sessions WHERE token = ? AND expires_at > datetime('now')",
-    [token]
-  )
-  return session?.user_id ?? null
-}
-
-async function userOwnsBusinessId(userId: number, businessId: number): Promise<boolean> {
-  const biz = await db.get('SELECT id FROM businesses WHERE id = ? AND user_id = ?', [businessId, userId])
-  return !!biz
-}
+import { getUserId, userOwnsBusinessId } from '@/lib/auth/apiAuth'
 
 export async function GET(request: NextRequest) {
   try {

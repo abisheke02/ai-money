@@ -1,11 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
 import dbQuery from '@/lib/db.async'
+import { getUserId, userOwnsBusinessId } from '@/lib/auth/apiAuth'
 
 export async function POST(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const businessId = searchParams.get('businessId')
     if (!businessId) return NextResponse.json({ error: 'businessId is required' }, { status: 400 })
+
+    const userId = await getUserId(request)
+    if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    if (!await userOwnsBusinessId(userId, parseInt(businessId, 10))) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
 
     const text = await request.text()
     const lines = text.split('\n').map(l => l.trim()).filter(Boolean)
